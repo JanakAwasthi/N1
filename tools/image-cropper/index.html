@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Cropper - LinkToQR.me Toolkit</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared-styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+</head>
+<body class="p-4">
+  <!-- Navigation Header -->
+  <nav class="mb-6">
+    <div class="max-w-6xl mx-auto">
+      <div class="bg-white bg-opacity-90 backdrop-blur-sm rounded-xl p-4 shadow-lg">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4">
+            <a href="../../index.html" class="text-2xl font-bold text-green-600 hover:text-green-700 transition-colors">
+              <i class="fas fa-arrow-left mr-2"></i>LinkToQR.me
+            </a>
+            <span class="text-gray-400">|</span>
+            <h2 class="text-xl font-semibold text-gray-800">Image Cropper</h2>
+          </div>
+          <div class="flex items-center space-x-3">
+            <a href="../../index.html" class="return-home-btn">
+              <i class="fas fa-home mr-2"></i>Home
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold text-white mb-2">
+        <i class="fas fa-crop mr-3"></i>Image Cropper
+      </h1>
+      <p class="text-white opacity-90">Crop images into different shapes including circular, square, and custom shapes</p>
+    </div>
+
+    <div class="tool-container p-8">
+      <div class="tool-layout">
+        
+        <!-- Input Section -->
+        <div class="input-section space-y-6">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-4">Image & Crop Settings</h2>
+          
+          <!-- Upload Section -->
+          <div class="input-group p-6">
+            <h3 class="text-lg font-medium text-gray-700 mb-4">
+              <i class="fas fa-cloud-upload-alt mr-2 text-green-600"></i>Upload Image
+            </h3>
+            
+            <div class="file-upload-area" id="dropzone">
+              <i class="fas fa-image text-5xl text-gray-400 mb-4"></i>
+              <p class="text-xl font-medium text-gray-600 mb-2">Drag & Drop Image Here</p>
+              <p class="text-sm text-gray-500 mb-4">Supports JPG, PNG, WebP formats • Max 10MB</p>
+              <input type="file" id="image-input" accept="image/*" class="hidden">
+              <button onclick="document.getElementById('image-input').click()" 
+                      class="cyber-button">
+                <i class="fas fa-folder-open mr-2"></i>Choose Image
+              </button>
+            </div>
+          </div>
+
+          <!-- Crop Shape Selection -->
+          <div id="crop-settings" class="input-group p-6 hidden">
+            <h3 class="text-lg font-medium text-gray-700 mb-4">
+              <i class="fas fa-shapes mr-2 text-green-600"></i>Crop Shape
+            </h3>
+            
+            <div class="grid grid-cols-2 gap-3 mb-4">
+              <button class="shape-btn active" data-shape="rectangle">
+                <i class="fas fa-square mr-2"></i>Rectangle
+              </button>
+              <button class="shape-btn" data-shape="circle">
+                <i class="fas fa-circle mr-2"></i>Circle
+              </button>
+              <button class="shape-btn" data-shape="square">
+                <i class="fas fa-stop mr-2"></i>Square
+              </button>
+              <button class="shape-btn" data-shape="rounded">
+                <i class="fas fa-square mr-2"></i>Rounded
+              </button>
+              <button class="shape-btn" data-shape="heart">
+                <i class="fas fa-heart mr-2"></i>Heart
+              </button>
+              <button class="shape-btn" data-shape="star">
+                <i class="fas fa-star mr-2"></i>Star
+              </button>
+              <button class="shape-btn" data-shape="triangle">
+                <i class="fas fa-play mr-2 rotate-90"></i>Triangle
+              </button>
+              <button class="shape-btn" data-shape="hexagon">
+                <i class="fas fa-draw-polygon mr-2"></i>Hexagon
+              </button>
+            </div>
+
+            <!-- New: Presets for Aspect Ratio and Output Size -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Aspect Ratio Preset</label>
+                <select id="aspect-preset" class="cyber-input">
+                  <option value="free">Free</option>
+                  <option value="1:1">1:1 (Square)</option>
+                  <option value="4:5">4:5 (Instagram Portrait)</option>
+                  <option value="16:9">16:9 (YouTube/Thumbnail)</option>
+                  <option value="3:2">3:2</option>
+                  <option value="2:3">2:3</option>
+                  <option value="9:16">9:16 (Story/Reel)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Output Size Preset</label>
+                <select id="size-preset" class="cyber-input">
+                  <option value="">Custom</option>
+                  <option value="1080x1080">1080 × 1080 (Square)</option>
+                  <option value="1200x628">1200 × 628 (OG Image)</option>
+                  <option value="1920x1080">1920 × 1080 (Full HD)</option>
+                  <option value="1280x720">1280 × 720 (HD)</option>
+                  <option value="1080x1350">1080 × 1350 (IG 4:5)</option>
+                  <option value="1080x1920">1080 × 1920 (Story)</option>
+                  <option value="1024x1024">1024 × 1024</option>
+                  <option value="512x512">512 × 512</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Custom Dimensions -->
+            <div class="space-y-3">
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Width (px)</label>
+                  <input type="number" id="crop-width" class="cyber-input" placeholder="800">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Height (px)</label>
+                  <input type="number" id="crop-height" class="cyber-input" placeholder="600">
+                </div>
+              </div>
+              
+              <div class="flex items-center space-x-3">
+                <input type="checkbox" id="maintain-ratio" checked class="w-4 h-4 text-green-600">
+                <label class="text-sm font-medium text-gray-700">Maintain aspect ratio</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Crop Controls -->
+          <div id="crop-controls" class="input-group p-6 hidden">
+            <h3 class="text-lg font-medium text-gray-700 mb-4">Crop Controls</h3>
+            <div class="grid grid-cols-2 gap-3 mb-4">
+              <button id="reset-crop" class="cyber-button">
+                <i class="fas fa-undo mr-2"></i>Reset
+              </button>
+              <button id="apply-crop" class="cyber-button">
+                <i class="fas fa-crop mr-2"></i>Apply Crop
+              </button>
+            </div>
+            <div id="crop-info" class="bg-white rounded p-3 text-sm text-gray-700 border"></div>
+          </div>
+        </div>
+
+        <!-- Output Section -->
+        <div class="output-section space-y-6">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-4">Image Editor & Preview</h2>
+          
+          <!-- Image Editor -->
+          <div class="output-group p-6">
+            <h3 class="text-lg font-medium text-gray-700 mb-4">
+              <i class="fas fa-edit mr-2 text-green-600"></i>Image Editor
+            </h3>
+            
+            <div id="editor-container" class="bg-gray-100 rounded-lg p-4 min-h-64 hidden">
+              <img id="crop-image" class="max-w-full h-auto mx-auto">
+            </div>
+            
+            <div id="editor-placeholder" class="bg-gray-100 rounded-lg p-8 text-center min-h-64">
+              <i class="fas fa-crop text-6xl text-gray-400 mb-4"></i>
+              <p class="text-gray-500">Upload an image to start cropping</p>
+            </div>
+
+            <!-- New: Editor Toolbar for easier navigation/handling -->
+            <div id="editor-toolbar" class="mt-4 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
+              <button id="zoom-in" class="cyber-button py-2"><i class="fas fa-search-plus mr-2"></i>Zoom In</button>
+              <button id="zoom-out" class="cyber-button py-2"><i class="fas fa-search-minus mr-2"></i>Zoom Out</button>
+              <button id="rotate-left" class="cyber-button py-2"><i class="fas fa-undo mr-2"></i>Rotate -90°</button>
+              <button id="rotate-right" class="cyber-button py-2"><i class="fas fa-redo mr-2"></i>Rotate +90°</button>
+              <button id="flip-h" class="cyber-button py-2"><i class="fas fa-arrows-alt-h mr-2"></i>Flip H</button>
+              <button id="flip-v" class="cyber-button py-2"><i class="fas fa-arrows-alt-v mr-2"></i>Flip V</button>
+              <button id="fit" class="cyber-button py-2"><i class="fas fa-compress-arrows-alt mr-2"></i>Fit</button>
+              <button id="center" class="cyber-button py-2"><i class="fas fa-crosshairs mr-2"></i>Center</button>
+            </div>
+
+            <!-- New: Live Previews (real-time) -->
+            <div id="live-previews" class="mt-6">
+              <h4 class="text-md font-semibold text-gray-700 mb-2">Live Previews</h4>
+              <div class="flex flex-wrap gap-3">
+                <div class="bg-white rounded p-2 border">
+                  <div class="live-preview" style="width:128px;height:128px;overflow:hidden;border-radius:0.5rem"></div>
+                  <div class="text-xs text-center mt-1">128 × 128</div>
+                </div>
+                <div class="bg-white rounded p-2 border">
+                  <div class="live-preview" style="width:256px;height:256px;overflow:hidden;border-radius:0.5rem"></div>
+                  <div class="text-xs text-center mt-1">256 × 256</div>
+                </div>
+                <div class="bg-white rounded p-2 border">
+                  <div class="live-preview" style="width:320px;height:180px;overflow:hidden;border-radius:0.5rem"></div>
+                  <div class="text-xs text-center mt-1">320 × 180</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- New: Live Output Preview Canvas at chosen size -->
+            <div id="live-output-container" class="mt-6">
+              <h4 class="text-md font-semibold text-gray-700 mb-2">Output Preview</h4>
+              <canvas id="live-preview-canvas" class="bg-white rounded border max-w-full"></canvas>
+              <p class="text-xs text-gray-500 mt-1">Updates in real-time as you adjust the crop. Set desired output size below.</p>
+            </div>
+          </div>
+
+          <!-- Cropped Preview -->
+          <div id="preview-section" class="output-group p-6 hidden">
+            <h3 class="text-lg font-medium text-gray-700 mb-4">Cropped Preview</h3>
+            <div id="cropped-preview" class="bg-white rounded-lg p-4 border-2 border-dashed border-gray-300 text-center min-h-32">
+              <canvas id="preview-canvas" class="max-w-full h-auto mx-auto"></canvas>
+            </div>
+          </div>
+
+          <!-- Image Information -->
+          <div id="image-info" class="output-details hidden">
+            <h3 class="text-lg font-medium text-gray-700 mb-4">Image Information</h3>
+            <div class="space-y-2 text-sm">
+              <div class="detail-item">
+                <span class="detail-label">Original Size:</span>
+                <span class="detail-value" id="original-size">-</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Cropped Size:</span>
+                <span class="detail-value" id="cropped-size">-</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Format:</span>
+                <span class="detail-value" id="image-format">-</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Download Section -->
+          <div id="download-section" class="output-group p-6 hidden">
+            <h3 class="text-lg font-medium text-gray-700 mb-4">Download</h3>
+            <div class="space-y-3">
+              <!-- New: Output size controls -->
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Output Width (px)</label>
+                  <input type="number" id="output-width" class="cyber-input" placeholder="auto">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Output Height (px)</label>
+                  <input type="number" id="output-height" class="cyber-input" placeholder="auto">
+                </div>
+              </div>
+              <div class="flex items-center space-x-3">
+                <input type="checkbox" id="output-lock-ratio" checked class="w-4 h-4 text-green-600">
+                <label class="text-sm font-medium text-gray-700">Lock output aspect ratio</label>
+              </div>
+
+              <select id="output-format" class="cyber-input mb-3">
+                <option value="png">PNG (Best quality)</option>
+                <option value="jpeg">JPEG (Smaller size)</option>
+                <option value="webp">WebP (Modern format)</option>
+              </select>
+              <button id="download-cropped" class="download-btn w-full">
+                <i class="fas fa-download mr-2"></i>Download Cropped Image
+              </button>
+            </div>
+          </div>
+
+          <!-- Output details for cropped result -->
+          <div id="output-details" class="output-details hidden"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ad Unit -->
+    <div class="max-w-6xl mx-auto my-6">
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6126558809611102" data-ad-slot="9131891151" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    </div>
+  </div>
+
+  <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+  <script src="../shared-utils.js"></script>
+  <script src="../universal-enhancements.js"></script>
+  <script src="image-cropper-new.js"></script>
+</body>
+</html>

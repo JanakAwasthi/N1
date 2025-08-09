@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  <title>QR Code Generator - LinkToQR.me NEXUS</title>
+  
+  <!-- Favicon and App Icons -->
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../favicon.ico">
+  
+  <!-- Google AdSense -->
+  <meta name="google-adsense-account" content="ca-pub-6126558809611102">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6126558809611102"
+     crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
+  <link rel="stylesheet" href="../shared-styles.css">
+  <script src="../shared-utils.js"></script>
+  <style>
+    :root {
+      --primary: #00d4ff;
+      --primary-dark: #0099cc;
+      --secondary: #ff0080;
+      --accent: #7c3aed;
+      --success: #00ff88;
+      --warning: #ffaa00;
+      --error: #ff0040;
+      --neon-blue: #00d4ff;
+      --neon-pink: #ff0080;
+      --neon-purple: #8000ff;
+      --dark-bg: #0a0a0a;
+      --dark-surface: #1a1a1a;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Exo 2', sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #000a1a 100%);
+      color: #ffffff;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+      scroll-behavior: smooth;
+      padding-bottom: 150px; /* Extra space for ads */
+    }
+
+    /* Enhanced scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 6px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink));
+      border-radius: 6px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue));
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 0, 128, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(128, 0, 255, 0.1) 0%, transparent 50%);
+      animation: backgroundShift 20s ease-in-out infinite;
+      z-index: -1;
+    }
+
+    @keyframes backgroundShift {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+
+    .orbitron { font-family: 'Orbitron', monospace; }
+
+    /* Futuristic Header */
+    .futuristic-header {
+      background: rgba(10, 10, 10, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+      box-shadow: 0 4px 30px rgba(0, 212, 255, 0.2);
+    }
+
+    .logo-text {
+      background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+    }
+
+    /* Cyber Buttons */
+    .cyber-button {
+      background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink));
+      border: none;
+      border-radius: 25px;
+      padding: 12px 30px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+    }
+
+    .cyber-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .cyber-button:hover::before {
+      left: 100%;
+    }
+
+    .cyber-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 30px rgba(0, 212, 255, 0.6);
+    }
+
+    /* Tool Container */
+    .tool-container {
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(0, 212, 255, 0.2);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 25px 50px rgba(0, 212, 255, 0.1);
+    }
+
+    .input-group {
+      background: rgba(0, 212, 255, 0.05);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .cyber-input {
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(0, 212, 255, 0.3);
+      border-radius: 10px;
+      padding: 12px 20px;
+      color: white;
+      width: 100%;
+      transition: all 0.3s ease;
+    }
+
+    .cyber-input:focus {
+      outline: none;
+      border-color: var(--neon-blue);
+      box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+    }
+
+    .cyber-input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .qr-preview {
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px dashed rgba(0, 212, 255, 0.3);
+      border-radius: 15px;
+      padding: 2rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .qr-ready {
+      border-color: var(--success);
+      background: rgba(0, 255, 136, 0.05);
+      box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+    }
+
+    /* Particles container */
+    #particles-js {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+  </style>
+</head>
+<body class="cyber-bg">
+  <!-- Particles.js Background -->
+  <div id="particles-js"></div>
+
+  <!-- Futuristic Header -->
+  <header class="futuristic-header sticky top-0 z-50 w-full py-4">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+      <!-- Logo -->
+      <a href="../../index.html" class="flex items-center">
+        <span class="text-3xl font-bold logo-text orbitron">⚡ LinkToQR.me</span>
+        <span class="text-lg font-semibold text-gray-400 ml-2">NEXUS</span>
+      </a>
+
+      <!-- Tool Name -->
+      <div class="hidden md:block">
+        <span class="text-xl font-semibold text-cyan-400 orbitron">QR GENERATOR</span>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="flex space-x-4">
+        <a href="../../index.html" class="cyber-button text-sm">
+          <i class="fas fa-home mr-2"></i>HOME
+        </a>
+        <a href="../qr-scanner/index.html" class="cyber-button text-sm" style="background: linear-gradient(45deg, #00ff88, #00d4aa);">
+          <i class="fas fa-camera mr-2"></i>SCANNER
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 py-16">
+    <!-- Hero Section -->
+    <div class="text-center mb-16">
+      <h1 class="text-6xl font-bold mb-6 orbitron" style="background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+        QR GENERATOR
+      </h1>
+      <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+        Create professional QR codes with advanced customization options and instant generation
+      </p>
+    </div>    <!-- Main Content -->
+    <div class="tool-layout">
+      
+      <!-- Input Section -->
+      <div class="input-section">
+        <h2 class="text-3xl font-semibold text-gradient orbitron mb-6">
+          QR SETTINGS
+        </h2>
+        
+        <!-- QR Type Selection -->
+        <div class="input-group">
+          <h3 class="text-xl font-medium text-cyan-400 mb-6 orbitron">QR Code Type</h3>
+          <div class="grid grid-cols-2 gap-4">
+            <button class="qr-type-btn active cyber-button text-sm" data-type="text">
+              <i class="fas fa-font mr-2"></i> TEXT
+            </button>
+            <button class="qr-type-btn cyber-button text-sm" data-type="url">
+              <i class="fas fa-link mr-2"></i> URL
+            </button>
+            <button class="qr-type-btn cyber-button text-sm" data-type="email">
+              <i class="fas fa-envelope mr-2"></i> EMAIL
+            </button>
+            <button class="qr-type-btn cyber-button text-sm" data-type="phone">
+              <i class="fas fa-phone mr-2"></i> PHONE
+            </button>
+            <button class="qr-type-btn cyber-button text-sm" data-type="sms">
+              <i class="fas fa-sms mr-2"></i> SMS
+            </button>
+            <button class="qr-type-btn cyber-button text-sm" data-type="wifi">
+              <i class="fas fa-wifi mr-2"></i> WIFI
+            </button>
+            <button class="qr-type-btn cyber-button text-sm" data-type="vcard">
+              <i class="fas fa-id-card mr-2"></i> vCard
+            </button>
+            <button class="qr-type-btn cyber-button text-sm" data-type="location">
+              <i class="fas fa-map-marker-alt mr-2"></i> Location
+            </button>
+          </div>
+        </div>
+
+        <!-- Dynamic Input Forms -->
+        <div class="input-group">
+          <h3 class="text-lg font-medium text-cyan-400 mb-4">Content</h3>
+          
+          <!-- Text Input -->
+          <div id="text-form" class="qr-form active">
+            <textarea id="text-input" placeholder="Enter your text here..." class="cyber-input" rows="4"></textarea>
+          </div>
+
+          <!-- URL Input -->
+          <div id="url-form" class="qr-form hidden">
+            <input type="url" id="url-input" placeholder="https://example.com" class="cyber-input">
+          </div>
+
+          <!-- Email Input -->
+          <div id="email-form" class="qr-form hidden space-y-3">
+            <input type="email" id="email-to" placeholder="Email address" class="cyber-input">
+            <input type="text" id="email-subject" placeholder="Subject (optional)" class="cyber-input">
+            <textarea id="email-body" placeholder="Message (optional)" class="cyber-input" rows="3"></textarea>
+          </div>
+
+          <!-- Phone Input -->
+          <div id="phone-form" class="qr-form hidden">
+            <input type="tel" id="phone-input" placeholder="+1234567890" class="cyber-input">
+          </div>
+
+          <!-- SMS Input -->
+          <div id="sms-form" class="qr-form hidden space-y-3">
+            <input type="tel" id="sms-number" placeholder="Phone number" class="cyber-input">
+            <textarea id="sms-message" placeholder="Message (optional)" class="cyber-input" rows="3"></textarea>
+          </div>
+
+          <!-- WiFi Input -->
+          <div id="wifi-form" class="qr-form hidden space-y-3">
+            <input type="text" id="wifi-ssid" placeholder="Network name (SSID)" class="cyber-input">
+            <input type="password" id="wifi-password" placeholder="Password" class="cyber-input">
+            <select id="wifi-security" class="cyber-input">
+              <option value="WPA">WPA/WPA2</option>
+              <option value="WEP">WEP</option>
+              <option value="nopass">No Password</option>
+            </select>
+          </div>
+
+          <!-- vCard Input -->
+          <div id="vcard-form" class="qr-form hidden space-y-3">
+            <div class="grid grid-cols-2 gap-3">
+              <input type="text" id="vcard-firstname" placeholder="First Name" class="cyber-input">
+              <input type="text" id="vcard-lastname" placeholder="Last Name" class="cyber-input">
+            </div>
+            <input type="text" id="vcard-organization" placeholder="Organization" class="cyber-input">
+            <input type="tel" id="vcard-phone" placeholder="Phone" class="cyber-input">
+            <input type="email" id="vcard-email" placeholder="Email" class="cyber-input">
+            <input type="url" id="vcard-website" placeholder="Website" class="cyber-input">
+          </div>
+
+          <!-- Location Input -->
+          <div id="location-form" class="qr-form hidden space-y-3">
+            <input type="text" id="location-lat" placeholder="Latitude" class="cyber-input">
+            <input type="text" id="location-lng" placeholder="Longitude" class="cyber-input">
+            <button type="button" onclick="getMyLocation()" class="cyber-button w-full">
+              <i class="fas fa-location-arrow mr-2"></i>Use My Location
+            </button>
+          </div>
+        </div>
+
+        <!-- Customization Options -->
+        <div class="input-group">
+          <h3 class="text-lg font-medium text-cyan-400 mb-4">Customization</h3>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Size</label>
+              <input type="range" id="qr-size" min="128" max="512" value="256" class="w-full">
+              <div class="flex justify-between text-xs text-gray-400">
+                <span>128px</span>
+                <span id="size-value">256px</span>
+                <span>512px</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Foreground Color</label>
+                <input type="color" id="fg-color" value="#000000" class="w-full h-10 border border-gray-300 rounded-lg">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Background Color</label>
+                <input type="color" id="bg-color" value="#ffffff" class="w-full h-10 border border-gray-300 rounded-lg">
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Error Correction Level</label>
+              <select id="error-level" class="cyber-input">
+                <option value="L">Low (7%)</option>
+                <option value="M">Medium (15%)</option>
+                <option value="Q">Quartile (25%)</option>
+                <option value="H" selected>High (30%)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Output Section -->
+      <div class="output-section">
+        <h2 class="text-3xl font-semibold text-gradient orbitron mb-6">Output & Download</h2>
+        
+        <!-- QR Code Preview -->
+        <div class="output-preview" id="qr-preview">
+          <i class="fas fa-qrcode" style="font-size: 3rem; color: rgba(255,255,255,0.3); margin-bottom: 1rem;"></i>
+          <p style="color: rgba(255,255,255,0.5);">QR code will appear here</p>
+          <div id="qr-container" class="hidden">
+            <div id="qr-code"></div>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container hidden">
+          <div class="progress-bar"></div>
+        </div>
+
+        <!-- QR Code Information -->
+        <div class="output-details" id="qr-info">
+          <!-- Details will be populated by JavaScript -->
+        </div>
+
+        <!-- Download Options -->
+        <div id="download-options" class="flex flex-col gap-2 mt-4">
+          <button onclick="downloadQR('png')" class="download-btn">
+            <i class="fas fa-download"></i> Download PNG
+          </button>
+          <button onclick="downloadQR('jpeg')" class="download-btn">
+            <i class="fas fa-download"></i> Download JPEG
+          </button>
+          <button onclick="downloadQR('svg')" class="download-btn">
+            <i class="fas fa-download"></i> Download SVG
+          </button>
+          <button onclick="printQR()" class="download-btn">
+            <i class="fas fa-print"></i> Print QR Code
+          </button>
+        </div>
+      </div>
+    </div>
+
+  <style>
+    .qr-type-btn.active {
+      background: linear-gradient(45deg, #00ff88, #00d4aa) !important;
+      color: white !important;
+      box-shadow: 0 0 20px rgba(0, 255, 136, 0.4) !important;
+    }
+    .qr-form {
+      transition: all 0.3s ease;
+    }
+    .qr-form.hidden {
+      display: none;
+    }
+    .qr-form.active {
+      display: block;
+    }
+  </style>
+
+  <script>
+    // Initialize Particles.js background
+    document.addEventListener('DOMContentLoaded', function() {
+      tsParticles.load("particles-js", {
+        particles: {
+          number: {
+            value: 60,
+            density: {
+              enable: true,
+              value_area: 800
+            }
+          },
+          color: {
+            value: "#00d4ff"
+          },
+          shape: {
+            type: "circle"
+          },
+          opacity: {
+            value: 0.1,
+            random: false
+          },
+          size: {
+            value: 3,
+            random: true
+          },
+          line_linked: {
+            enable: true,
+            distance: 150,
+            color: "#00d4ff",
+            opacity: 0.2,
+            width: 1
+          },
+          move: {
+            enable: true,
+            speed: 2,
+            direction: "none",
+            random: false,
+            straight: false,
+            out_mode: "out",
+            bounce: false
+          }
+        },
+        interactivity: {
+          detect_on: "canvas",
+          events: {
+            onhover: {
+              enable: true,
+              mode: "grab"
+            },
+            onclick: {
+              enable: true,
+              mode: "push"
+            },
+            resize: true
+          },
+          modes: {
+            grab: {
+              distance: 140,
+              line_linked: {
+                opacity: 1
+              }
+            },
+            push: {
+              particles_nb: 4
+            }
+          }
+        },
+        retina_detect: true
+      });
+    });
+  </script>
+  <script src="qr-generator.js"></script>
+  <script src="../universal-enhancements.js"></script>
+
+  <!-- Advertisement Space -->
+  <div class="container mx-auto px-4 py-8 mt-12">
+    <div class="bg-gray-900 bg-opacity-50 backdrop-filter backdrop-blur-lg border border-cyan-500 border-opacity-30 rounded-2xl p-6 text-center">
+      <h3 class="text-lg font-bold text-white mb-4 orbitron">💼 SPONSORED</h3>
+      
+      <!-- Google AdSense Ad Block -->
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6126558809611102"
+           crossorigin="anonymous"></script>
+      <!-- QR Generator Tool Ad -->
+      <ins class="adsbygoogle"
+           style="display:block; margin: 20px 0;"
+           data-ad-client="ca-pub-6126558809611102"
+           data-ad-slot="9131891151"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+           (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+      
+      <p class="text-gray-400 text-sm mt-4">
+        🌟 Support our free tools by viewing ads • Generate QR codes instantly
+      </p>
+    </div>
+  </div>
+
+</body>
+</html>

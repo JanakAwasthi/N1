@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF Merger Pro - LinkToQR.me NEXUS</title>
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <meta name="description" content="Merge multiple PDF files with advanced options, reorder, preview, and optimize. Futuristic, fast, and privacy-friendly.">
+  <meta name="keywords" content="pdf merger, merge pdf, combine pdf, batch pdf, reorder pdf, pdf tools, futuristic pdf, linktoqr, nexus, online pdf, privacy, advanced pdf, pdf optimizer, pdf bookmarks, alternating merge, page range, add page numbers, pdf pro">
+  <meta name="theme-color" content="#0a0a0a">
+  <meta name="google-adsense-account" content="ca-pub-6126558809611102">
+  <link rel="stylesheet" href="../../css/futuristic-styles.css">
+  <link rel="stylesheet" href="../shared-styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+  <script src="../shared-utils-enhanced.js"></script>
+  <script src="pdf-merger-enhanced.js" defer></script>
+  <style>
+    body { background: #0a0a0a; color: #fff; }
+    .glass-card, .tool-container { background: rgba(20,20,30,0.95); color: #fff; }
+    .glass-button, .accent { color: #fff; }
+    .glass-button.accent { background: linear-gradient(90deg, #ff0080, #7c3aed); }
+    .glass-button { background: linear-gradient(90deg, #00d4ff, #7c3aed); }
+    .glass-button:hover { filter: brightness(1.2); }
+    .input, input, select, textarea { background: rgba(30,30,40,0.9); color: #fff; border: 1px solid #00d4ff; }
+    .input:focus, input:focus, select:focus, textarea:focus { outline: 2px solid #ff0080; }
+    .dropzone { background: rgba(0,212,255,0.08); border: 2px dashed #00d4ff; color: #fff; }
+    .dropzone.active { background: rgba(0,212,255,0.18); border-color: #ff0080; }
+    .sortable-ghost { opacity: 0.5; }
+    .sortable-chosen { background: #222244; }
+    .merge-progress { background: linear-gradient(90deg, #00d4ff, #ff0080); }
+    .text-gradient { 
+      background: linear-gradient(90deg, #00d4ff, #ff0080); 
+      -webkit-background-clip: text; 
+      background-clip: text; 
+      -webkit-text-fill-color: transparent; 
+      color: transparent; 
+    }
+    .text-contrast { color: #fff !important; }
+    .text-muted { color: #b0b0c0 !important; }
+    .text-accent { color: #00d4ff !important; }
+    .text-danger { color: #ff0080 !important; }
+    .text-success { color: #00ff88 !important; }
+    .bg-glass { background: rgba(30,30,40,0.95); }
+    .hidden { display: none; }
+    .rounded-xl { border-radius: 1rem; }
+    .shadow-lg { box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+    .p-4 { padding: 1rem; }
+    .p-8 { padding: 2rem; }
+    .mb-4 { margin-bottom: 1rem; }
+    .mb-8 { margin-bottom: 2rem; }
+    .mt-4 { margin-top: 1rem; }
+    .w-full { width: 100%; }
+    .flex { display: flex; }
+    .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+    .space-x-4 > * + * { margin-left: 1rem; }
+    .text-center { text-align: center; }
+    .font-bold { font-weight: bold; }
+    .font-semibold { font-weight: 600; }
+    .text-lg { font-size: 1.25rem; }
+    .text-xl { font-size: 1.5rem; }
+    .text-2xl { font-size: 2rem; }
+    .text-4xl { font-size: 2.5rem; }
+    .transition-all { transition: all 0.2s; }
+    .cursor-pointer { cursor: pointer; }
+    .overflow-x-auto { overflow-x: auto; }
+    .border { border: 1px solid #222244; }
+    .border-accent { border-color: #00d4ff; }
+    .border-danger { border-color: #ff0080; }
+    .border-success { border-color: #00ff88; }
+    .bg-accent { background: #00d4ff; }
+    .bg-danger { background: #ff0080; }
+    .bg-success { background: #00ff88; }
+    .rounded-lg { border-radius: 0.5rem; }
+    .mt-8 { margin-top: 2rem; }
+    .mb-2 { margin-bottom: 0.5rem; }
+    .mt-2 { margin-top: 0.5rem; }
+    .gap-4 { gap: 1rem; }
+    .gap-2 { gap: 0.5rem; }
+    .w-12 { width: 3rem; }
+    .h-16 { height: 4rem; }
+    .text-xs { font-size: 0.75rem; }
+    .text-sm { font-size: 0.875rem; }
+    .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .cursor-move { cursor: move; }
+    .animate-slide-up { animation: slideUp 0.4s cubic-bezier(.4,2,.6,1) both; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(40px);} to { opacity: 1; transform: none; } }
+  </style>
+</head>
+<body>
+  <div id="tsparticles" style="position:fixed;z-index:0;inset:0;"></div>
+  <nav class="futuristic-header p-4 mb-8">
+    <div class="flex items-center justify-between">
+      <a href="../../index.html" class="return-home-btn"><i class="fas fa-arrow-left"></i>Home</a>
+      <span class="logo-text text-2xl font-bold">PDF Merger Pro</span>
+      <a href="../digital-signature/index.html" class="return-home-btn"><i class="fas fa-signature"></i>Sign PDF</a>
+    </div>
+  </nav>
+  <main class="max-w-4xl mx-auto tool-container glass-card p-8 shadow-lg rounded-xl">
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold text-gradient mb-2"><i class="fas fa-file-pdf mr-2"></i>PDF Merger Pro</h1>
+      <p class="text-lg text-muted">Merge, reorder, and optimize PDFs with futuristic ease. All processing is local & private.</p>
+    </div>
+    <!-- AdSense Banner -->
+    <div class="text-center mb-8">
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6126558809611102" data-ad-slot="9131891151" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    </div>
+    <section class="mb-8">
+      <div class="dropzone p-8 text-center cursor-pointer" id="dropZone">
+        <i class="fas fa-cloud-upload-alt text-4xl text-accent mb-4"></i>
+        <p class="text-xl font-semibold text-contrast mb-2">Drag & Drop PDF Files Here</p>
+        <p class="text-sm text-muted mb-4">or click to browse (multiple files supported)</p>
+        <input type="file" id="fileInput" accept="application/pdf" multiple class="hidden">
+        <button onclick="document.getElementById('fileInput').click()" class="glass-button px-6 py-2 mt-2"><i class="fas fa-folder-open mr-2"></i>Choose PDF Files</button>
+      </div>
+    </section>
+    <section id="fileListSection" class="hidden mb-8">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-semibold text-contrast">PDF Files (<span id="filesCount">0</span>)</h3>
+        <div class="flex gap-2">
+          <button id="clearAllBtn" class="glass-button accent px-4 py-2"><i class="fas fa-trash mr-1"></i>Clear All</button>
+        </div>
+      </div>
+      <div class="feature-card p-4 mb-4 bg-glass border-accent">
+        <p class="text-sm text-accent"><i class="fas fa-info-circle mr-2"></i><strong>Tip:</strong> Drag and drop the PDF items below to reorder them. The final merged PDF will follow this order.</p>
+      </div>
+      <div id="fileList" class="space-y-3 mb-6"></div>
+      <div class="flex gap-2 mb-4">
+        <button id="reverseOrderBtn" class="glass-button px-4 py-2"><i class="fas fa-sort-amount-down mr-1"></i>Reverse Order</button>
+        <button id="sortByNameBtn" class="glass-button px-4 py-2"><i class="fas fa-sort-alpha-down mr-1"></i>Sort by Name</button>
+        <button id="sortBySizeBtn" class="glass-button px-4 py-2"><i class="fas fa-sort-amount-up-alt mr-1"></i>Sort by Size</button>
+        <button id="removeDuplicatesBtn" class="glass-button px-4 py-2"><i class="fas fa-clone mr-1"></i>Remove Duplicates</button>
+      </div>
+      <div class="bg-glass p-6 rounded-xl mb-6 border-accent border">
+        <h4 class="text-lg font-semibold text-contrast mb-4">Merge Options</h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="flex items-center gap-2">
+              <input type="checkbox" id="addBookmarks" checked class="w-4 h-4 accent">
+              <span class="text-sm font-medium text-contrast">Add bookmarks for each PDF</span>
+            </label>
+          </div>
+          <div>
+            <label class="flex items-center gap-2">
+              <input type="checkbox" id="preserveMetadata" checked class="w-4 h-4 accent">
+              <span class="text-sm font-medium text-contrast">Preserve metadata</span>
+            </label>
+          </div>
+          <div>
+            <label class="flex items-center gap-2">
+              <input type="checkbox" id="optimizeSize" class="w-4 h-4 accent">
+              <span class="text-sm font-medium text-contrast">Optimize file size</span>
+            </label>
+          </div>
+          <div>
+            <label class="flex items-center gap-2">
+              <input type="checkbox" id="addPageNumbers" class="w-4 h-4 accent">
+              <span class="text-sm font-medium text-contrast">Add page numbers</span>
+            </label>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-contrast mb-2">Merge Mode:</label>
+            <select id="mergeMode" class="input w-full">
+              <option value="sequential">Sequential (default)</option>
+              <option value="alternating">Alternating (interleave pages)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-contrast mb-2">Page Range:</label>
+            <select id="pageRange" class="input w-full">
+              <option value="all">All Pages</option>
+              <option value="odd">Odd Pages</option>
+              <option value="even">Even Pages</option>
+              <option value="custom">Custom Range</option>
+            </select>
+            <div id="customRangeSection" class="hidden mt-2">
+              <input type="text" id="customRange" class="input w-full" placeholder="e.g. 1-3,5,7-9">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex gap-2 mb-4">
+        <div class="text-sm text-muted">Estimated Output Size: <span id="estimatedSize">-</span></div>
+        <div class="text-sm text-muted">Total Pages: <span id="totalPages">-</span></div>
+      </div>
+      <button id="mergeBtn" class="w-full py-4 glass-button text-lg font-bold mt-4"><i class="fas fa-magic mr-2"></i>Merge PDFs</button>
+    </section>
+    <section id="progressSection" class="hidden mb-8">
+      <div class="bg-glass p-6 rounded-xl border-accent border">
+        <h3 class="text-lg font-semibold text-contrast mb-4"><i class="fas fa-cogs mr-2 text-accent"></i>Merging Progress</h3>
+        <div class="mb-4">
+          <div class="flex justify-between text-sm text-muted mb-2">
+            <span id="progressText">Initializing...</span>
+            <span id="progressPercentage">0%</span>
+          </div>
+          <div class="w-full bg-danger rounded-full h-3">
+            <div id="progressBar" class="merge-progress h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="resultSection" class="hidden">
+      <div class="bg-success bg-opacity-10 border border-success p-6 rounded-xl">
+        <h3 class="text-lg font-semibold text-success mb-4"><i class="fas fa-check-circle mr-2"></i>Merge Completed Successfully!</h3>
+        <div class="flex flex-col md:flex-row gap-4 mb-6">
+          <div class="text-sm"><span class="font-medium text-contrast">Files Merged:</span> <span id="filesCountResult" class="text-success">-</span></div>
+          <div class="text-sm"><span class="font-medium text-contrast">Total Pages:</span> <span id="totalPagesResult" class="text-success">-</span></div>
+          <div class="text-sm"><span class="font-medium text-contrast">File Size:</span> <span id="fileSizeResult" class="text-success">-</span></div>
+        </div>
+        <div class="flex gap-4">
+          <button id="downloadBtn" class="glass-button bg-success text-lg font-bold flex-1"><i class="fas fa-download mr-2"></i>Download Merged PDF</button>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="../universal-enhancements.js" defer></script>
+  <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+</body>
+</html>

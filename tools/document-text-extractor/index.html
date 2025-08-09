@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6126558809611102" 
+            crossorigin="anonymous"></script>
+    <meta name="google-adsense-account" content="ca-pub-6126558809611102">
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Text Extractor - LinkToQR.me NEXUS</title>
+    <meta name="description" content="Extract text from PDF, Word documents, and images using OCR technology. Professional document text extraction tool.">
+    <meta name="keywords" content="text extraction, PDF text, OCR, document reader, text from image, Word extractor">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- PDF.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <!-- Tesseract.js for OCR -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.1.1/dist/tesseract.min.js"></script>
+    
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="../shared-styles.css">
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+    
+    <style>
+        .drop-zone {
+            border: 2px dashed #cbd5e0;
+            transition: all 0.3s ease;
+        }
+        .drop-zone.dragover {
+            border-color: #667eea;
+            background-color: #f7fafc;
+        }
+        .text-output {
+            background-color: #ffffff;
+            color: #1a202c;
+            border: 2px solid #e2e8f0;
+        }
+        .progress-bar {
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
+        <div class="max-w-6xl mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <a href="../../index.html" class="flex items-center space-x-2 text-gray-700 hover:text-blue-600 transition-colors">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Back to Tools</span>
+                    </a>
+                    <div class="relative group">
+                        <button class="flex items-center space-x-2 text-gray-700 hover:text-blue-600 transition-colors px-3 py-2 rounded-md">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Document Tools</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="absolute left-0 mt-2 w-56 bg-white rounded-lg shadow-xl border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                            <div class="py-2">
+                                <a href="../document-watermark/index.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-stamp mr-2"></i>Document Watermark
+                                </a>
+                                <a href="../document-scanner/index.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-scanner mr-2"></i>Document Scanner
+                                </a>
+                                <a href="../pdf-converter/index.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-file-pdf mr-2"></i>PDF Converter
+                                </a>
+                                <a href="../pdf-merger/index.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-layer-group mr-2"></i>PDF Merger
+                                </a>
+                                <a href="../photo-to-pdf/index.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-images mr-2"></i>Photo to PDF
+                                </a>
+                                <a href="../digital-signature/index.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-signature mr-2"></i>Digital Signature
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative group">
+                        <button class="flex items-center space-x-2 text-gray-700 hover:text-blue-600 transition-colors px-3 py-2 rounded-md">
+                            <i class="fas fa-images"></i>
+                            <span>Image Tools</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="absolute left-0 mt-2 w-56 bg-white rounded-lg shadow-xl border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                            <div class="py-2">
+                                <a href="../image-compressor/index.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-compress mr-2"></i>Image Compressor
+                                </a>
+                                <a href="../image-resizer/index.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-expand-arrows-alt mr-2"></i>Image Resizer
+                                </a>
+                                <a href="../image-format-converter/index.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-exchange-alt mr-2"></i>Format Converter
+                                </a>
+                                <a href="../image-enhancer/index.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-magic mr-2"></i>Image Enhancer
+                                </a>
+                                <a href="../image-cropper/index.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-crop mr-2"></i>Image Cropper
+                                </a>
+                                <a href="../image-merger/index.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-layer-group mr-2"></i>Image Merger
+                                </a>
+                                <a href="../image-collage-maker/index.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-th mr-2"></i>Collage Maker
+                                </a>
+                                <a href="../image-background-remover/index.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-cut mr-2"></i>Background Remover
+                                </a>
+                                <a href="../id-photo-maker/index.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-id-card mr-2"></i>ID Photo Maker
+                                </a>
+                                <a href="../watermark-remover/index.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-eraser mr-2"></i>Watermark Remover
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h1 class="text-2xl font-bold text-gray-800">Document Text Extractor</h1>
+                <div class="w-24"></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        <!-- AdSense Display Ad -->
+        <div class="flex justify-center mb-8">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-6126558809611102"
+                 data-ad-slot="1234567890"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+
+        <!-- Tool Description -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="text-center">
+                <i class="fas fa-file-alt text-4xl text-blue-500 mb-4"></i>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Document Text Extractor</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    Extract text from PDF documents, Word files, and images using advanced OCR technology. Perfect for digitizing documents and making them searchable.
+                </p>
+            </div>
+        </div>
+
+        <!-- File Upload Section -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h3 class="text-xl font-semibold text-gray-800 mb-6">Upload Document</h3>
+            
+            <!-- File Upload Area -->
+            <div class="drop-zone rounded-lg p-8 text-center mb-6" id="dropZone">
+                <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
+                <p class="text-lg text-gray-600 mb-2">Drag and drop your document here</p>
+                <p class="text-sm text-gray-500 mb-4">or</p>
+                <input type="file" id="fileInput" class="hidden" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.bmp,.tiff">
+                <button onclick="document.getElementById('fileInput').click()" 
+                        class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-md transition-colors">
+                    <i class="fas fa-folder-open mr-2"></i>Select Document
+                </button>
+                <p class="text-xs text-gray-500 mt-4">
+                    Supported: PDF, Word (DOC/DOCX), Images (JPG, PNG, BMP, TIFF)
+                </p>
+            </div>
+
+            <!-- Processing Progress -->
+            <div id="progressSection" class="hidden mb-6">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-medium text-gray-700">Processing Document...</span>
+                    <span id="progressPercent" class="text-sm text-gray-500">0%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div id="progressBar" class="progress-bar bg-blue-500 h-2 rounded-full" style="width: 0%"></div>
+                </div>
+                <p id="progressMessage" class="text-xs text-gray-500 mt-2">Initializing...</p>
+            </div>
+
+            <!-- Extraction Options -->
+            <div class="bg-gray-50 rounded-lg p-4">
+                <h4 class="font-semibold text-gray-800 mb-3">Extraction Options</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <label class="flex items-center">
+                        <input type="checkbox" id="preserveFormatting" checked class="mr-2">
+                        <span class="text-sm">Preserve text formatting</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" id="removeLineBreaks" class="mr-2">
+                        <span class="text-sm">Remove unnecessary line breaks</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" id="extractImages" class="mr-2">
+                        <span class="text-sm">Extract embedded images</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" id="ocrLanguage" class="mr-2">
+                        <span class="text-sm">Auto-detect language (OCR)</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Extracted Text Section -->
+        <div id="extractedSection" class="bg-white rounded-lg shadow-md p-6 mb-8 hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-semibold text-gray-800">Extracted Text</h3>
+                <div class="flex space-x-2">
+                    <button onclick="copyExtractedText()" 
+                            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm transition-colors">
+                        <i class="fas fa-copy mr-1"></i>Copy Text
+                    </button>
+                    <button onclick="downloadExtractedText()" 
+                            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md text-sm transition-colors">
+                        <i class="fas fa-download mr-1"></i>Download
+                    </button>
+                </div>
+            </div>
+            
+            <textarea id="extractedText" readonly 
+                      class="text-output w-full h-96 p-4 rounded-md resize-none"></textarea>
+            
+            <div class="flex justify-between items-center mt-4 text-sm text-gray-600">
+                <span id="textStats">0 characters, 0 words</span>
+                <span id="extractionTime"></span>
+            </div>
+        </div>
+
+        <!-- Extraction History -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-semibold text-gray-800">Extraction History</h3>
+                <button onclick="clearHistory()" class="text-red-500 hover:text-red-700 text-sm">
+                    <i class="fas fa-trash mr-1"></i>Clear History
+                </button>
+            </div>
+            <div id="extractionHistory" class="space-y-4">
+                <p class="text-gray-500 text-center">No extractions yet</p>
+            </div>
+        </div>
+
+        <!-- About Text Extraction -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">About Text Extraction</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h4 class="font-semibold text-gray-800 mb-2">Supported Formats</h4>
+                    <ul class="text-sm text-gray-600 space-y-1">
+                        <li>• <strong>PDF:</strong> Text layer extraction</li>
+                        <li>• <strong>Word:</strong> DOC and DOCX files</li>
+                        <li>• <strong>Images:</strong> OCR for JPG, PNG, BMP, TIFF</li>
+                        <li>• <strong>Scanned Documents:</strong> OCR technology</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-gray-800 mb-2">Use Cases</h4>
+                    <ul class="text-sm text-gray-600 space-y-1">
+                        <li>• Digitizing printed documents</li>
+                        <li>• Converting PDFs to editable text</li>
+                        <li>• Extracting text from images</li>
+                        <li>• Creating searchable content</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- AdSense Display Ad -->
+        <div class="flex justify-center mt-8">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-6126558809611102"
+                 data-ad-slot="1234567890"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <div class="mb-4">
+                <h3 class="text-lg font-semibold mb-2">LinkToQR.me NEXUS</h3>
+                <p class="text-gray-400">Professional Document Text Extractor Tool</p>
+            </div>
+            <div class="flex justify-center space-x-6 text-sm">
+                <a href="../../index.html" class="hover:text-blue-400 transition-colors">Home</a>
+                <a href="../../privacy-policy.html" class="hover:text-blue-400 transition-colors">Privacy Policy</a>
+                <a href="../../how-to-use.html" class="hover:text-blue-400 transition-colors">How to Use</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../shared-utils.js"></script>
+    <script src="document-text-extractor.js"></script>
+    
+    <!-- Initialize AdSense -->
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</body>
+</html>

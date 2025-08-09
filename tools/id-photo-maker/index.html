@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ID Photo Maker - LinkToQR.me Toolkit</title>  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared-styles.css">
+  <style>
+    body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%); min-height: 100vh; }
+    .tool-container { background: white; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+    .input-group { background: #f1f5f9; border-radius: 12px; }
+    .photo-preview { background: #f8fafc; border-radius: 15px; border: 2px dashed #e5e7eb; min-height: 300px; }
+    .photo-ready { border-color: #8b5cf6; background: #f5f3ff; }
+    .drop-zone { border: 2px dashed #d1d5db; border-radius: 12px; transition: all 0.3s; }
+    .drop-zone.dragover { border-color: #8b5cf6; background-color: #f5f3ff; }
+    .size-preset { border: 2px solid #e5e7eb; border-radius: 8px; transition: all 0.3s; cursor: pointer; }
+    .size-preset:hover { border-color: #8b5cf6; }
+    .size-preset.active { border-color: #8b5cf6; background: #f5f3ff; }  </style>
+</head>
+<body class="p-4">
+  <!-- Navigation Header -->
+  <nav class="mb-6">
+    <div class="max-w-6xl mx-auto">
+      <div class="bg-white bg-opacity-90 backdrop-blur-sm rounded-xl p-4 shadow-lg">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4">
+            <a href="../../index.html" class="text-2xl font-bold text-purple-600 hover:text-purple-700 transition-colors">
+              <i class="fas fa-arrow-left mr-2"></i>LinkToQR.me
+            </a>
+            <span class="text-gray-400">|</span>
+            <h2 class="text-xl font-semibold text-gray-800">ID Photo Maker</h2>
+          </div>
+          <div class="flex items-center space-x-3">
+            <a href="../../index.html" class="return-home-btn">
+              <i class="fas fa-home mr-2"></i>Home
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold text-white mb-2">Professional ID Photo Maker</h1>
+      <p class="text-white opacity-90">Create perfect ID photos with custom backgrounds and standard sizes</p>
+    </div>    <div class="tool-container p-8">
+      <div class="tool-layout">
+        
+        <!-- Input Section -->
+        <div class="input-section space-y-6">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-4">Photo Settings</h2>
+          
+          <!-- Upload Area -->
+          <div class="input-group p-6">
+            <h3 class="text-lg font-medium text-gray-700 mb-4">Upload Photo</h3>
+            <div 
+              id="drop-zone" 
+              class="drop-zone p-8 text-center cursor-pointer"
+              onclick="document.getElementById('file-input').click()"
+            >
+              <i class="fas fa-user-circle text-4xl text-gray-400 mb-4"></i>
+              <p class="text-gray-600 mb-2">Drop photo here or click to browse</p>
+              <p class="text-sm text-gray-500">Best with portrait photos</p>
+              <input 
+                type="file" 
+                id="file-input" 
+                accept="image/*" 
+                class="hidden"
+              >
+            </div>
+          </div>
+
+          <!-- Size Presets -->
+          <div class="input-group p-6">
+            <h3 class="text-lg font-medium text-gray-700 mb-4">Photo Size</h3>
+            <div class="grid grid-cols-2 gap-3 mb-4">
+              <div class="size-preset p-3 text-center" data-width="35" data-height="45">
+                <h4 class="font-medium text-sm">Passport</h4>
+                <p class="text-xs text-gray-600">35×45mm</p>
+              </div>
+              <div class="size-preset p-3 text-center" data-width="25" data-height="35">
+                <h4 class="font-medium text-sm">Visa</h4>
+                <p class="text-xs text-gray-600">25×35mm</p>
+              </div>
+              <div class="size-preset p-3 text-center" data-width="40" data-height="60">
+                <h4 class="font-medium text-sm">ID Card</h4>
+                <p class="text-xs text-gray-600">40×60mm</p>
+              </div>
+              <div class="size-preset p-3 text-center" data-width="50" data-height="70">
+                <h4 class="font-medium text-sm">Large</h4>
+                <p class="text-xs text-gray-600">50×70mm</p>
+              </div>
+            </div>
+            
+            <!-- Custom Size -->
+            <div class="space-y-3">
+              <h4 class="font-medium text-gray-700">Custom Size (mm)</h4>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-sm text-gray-600 mb-1">Width</label>
+                  <input type="number" id="custom-width" value="35" min="10" max="200" class="w-full p-2 border border-gray-300 rounded-lg">
+                </div>
+                <div>
+                  <label class="block text-sm text-gray-600 mb-1">Height</label>
+                  <input type="number" id="custom-height" value="45" min="10" max="200" class="w-full p-2 border border-gray-300 rounded-lg">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Background Settings -->
+          <div class="input-group p-6">
+            <h3 class="text-lg font-medium text-gray-700 mb-4">Background</h3>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-600 mb-2">Background Type</label>
+                <div class="grid grid-cols-2 gap-2">
+                  <button class="bg-type-btn p-2 border border-gray-300 rounded active" data-type="color">
+                    <i class="fas fa-palette mr-2"></i>Solid Color
+                  </button>
+                  <button class="bg-type-btn p-2 border border-gray-300 rounded" data-type="remove">
+                    <i class="fas fa-magic mr-2"></i>Remove BG
+                  </button>
+                </div>
+              </div>
+              
+              <div id="color-settings">
+                <label class="block text-sm font-medium text-gray-600 mb-2">Background Color</label>
+                <div class="flex space-x-2 mb-3">
+                  <button class="color-preset w-8 h-8 rounded-full border-2 border-gray-300" style="background: #ffffff" data-color="#ffffff"></button>
+                  <button class="color-preset w-8 h-8 rounded-full border-2 border-gray-300" style="background: #f3f4f6" data-color="#f3f4f6"></button>
+                  <button class="color-preset w-8 h-8 rounded-full border-2 border-gray-300" style="background: #dbeafe" data-color="#dbeafe"></button>
+                  <button class="color-preset w-8 h-8 rounded-full border-2 border-gray-300" style="background: #fef2f2" data-color="#fef2f2"></button>
+                </div>
+                <input type="color" id="bg-color" value="#ffffff" class="w-full h-10 border border-gray-300 rounded-lg">
+              </div>
+            </div>
+          </div>
+
+          <!-- Photo Adjustments -->
+          <div class="input-group p-6">
+            <h3 class="text-lg font-medium text-gray-700 mb-4">Adjustments</h3>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-600 mb-2">
+                  Position X: <span id="pos-x-value">50</span>%
+                </label>
+                <input type="range" id="position-x" min="0" max="100" value="50" class="w-full">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-600 mb-2">
+                  Position Y: <span id="pos-y-value">30</span>%
+                </label>
+                <input type="range" id="position-y" min="0" max="100" value="30" class="w-full">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-600 mb-2">
+                  Zoom: <span id="zoom-value">100</span>%
+                </label>
+                <input type="range" id="zoom-level" min="50" max="200" value="100" class="w-full">
+              </div>
+            </div>
+          </div>
+        </div>        <!-- Output Section -->
+        <div class="output-section space-y-6">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-4">Preview & Download</h2>
+          
+          <!-- Photo Preview -->
+          <div class="photo-preview p-8 text-center" id="photo-preview">
+            <i class="fas fa-user-circle text-6xl text-gray-300 mb-4"></i>
+            <p class="text-gray-500">Upload a photo to start</p>
+            
+            <div id="photo-container" class="hidden">
+              <div class="relative mx-auto bg-white rounded-lg shadow-lg" id="photo-canvas-container">
+                <canvas id="photo-canvas" class="rounded-lg"></canvas>
+                <div class="absolute inset-0 border-2 border-dashed border-gray-300 rounded-lg pointer-events-none" id="crop-guide"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Photo Info -->
+          <div id="photo-info" class="input-group p-4 hidden">
+            <h3 class="text-lg font-medium text-gray-700 mb-3">Photo Information</h3>
+            <div class="grid grid-cols-2 gap-4 text-sm">
+              <div><span class="font-medium">Size:</span> <span id="output-size">-</span></div>
+              <div><span class="font-medium">Resolution:</span> <span id="output-resolution">-</span></div>
+              <div><span class="font-medium">DPI:</span> <span id="output-dpi">300</span></div>
+              <div><span class="font-medium">Format:</span> <span id="output-format">JPEG</span></div>
+            </div>
+          </div>
+
+          <!-- Download Options -->
+          <div id="download-options" class="hidden space-y-4">
+            <h3 class="text-lg font-medium text-gray-700 mb-3">Download Options</h3>
+            
+            <!-- Print Layouts -->
+            <div class="input-group p-4">
+              <h4 class="font-medium text-gray-700 mb-3">Print Layout</h4>
+              <div class="grid grid-cols-3 gap-2">
+                <button onclick="generatePrintLayout(1)" class="py-2 px-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all text-sm">
+                  Single
+                </button>
+                <button onclick="generatePrintLayout(4)" class="py-2 px-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all text-sm">
+                  4 Photos
+                </button>
+                <button onclick="generatePrintLayout(8)" class="py-2 px-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all text-sm">
+                  8 Photos
+                </button>
+              </div>
+            </div>
+
+            <!-- Download Buttons -->
+            <div class="space-y-2">
+              <button 
+                onclick="downloadPhoto('high')" 
+                class="w-full py-3 px-6 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all font-medium"
+              >
+                <i class="fas fa-download mr-2"></i>Download High Quality (300 DPI)
+              </button>
+              <button 
+                onclick="downloadPhoto('web')" 
+                class="w-full py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-all"
+              >
+                <i class="fas fa-download mr-2"></i>Download Web Quality (72 DPI)
+              </button>
+            </div>
+          </div>
+
+          <!-- Instructions -->
+          <div class="input-group p-6">
+            <h3 class="text-lg font-medium text-gray-700 mb-4">Tips for Best Results</h3>
+            <div class="space-y-2 text-sm text-gray-600">
+              <div class="flex items-start space-x-2">
+                <i class="fas fa-check-circle text-green-500 mt-0.5"></i>
+                <p>Use a high-resolution photo (at least 600x800 pixels)</p>
+              </div>
+              <div class="flex items-start space-x-2">
+                <i class="fas fa-check-circle text-green-500 mt-0.5"></i>
+                <p>Ensure good lighting and avoid shadows</p>
+              </div>
+              <div class="flex items-start space-x-2">
+                <i class="fas fa-check-circle text-green-500 mt-0.5"></i>
+                <p>Keep a neutral expression and look straight ahead</p>
+              </div>
+              <div class="flex items-start space-x-2">
+                <i class="fas fa-check-circle text-green-500 mt-0.5"></i>
+                <p>Head should occupy 70-80% of the photo height</p>
+              </div>  </div>
+  <script src="../shared-utils.js"></script>
+  <script src="../universal-enhancements.js"></script>
+  <script src="id-photo-maker-fixed.js"></script>
+</body>
+</html>

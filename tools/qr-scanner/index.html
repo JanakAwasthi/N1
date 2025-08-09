@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Code Scanner - LinkToQR.me NEXUS</title>
+  
+  <!-- Favicon and App Icons -->
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../favicon.ico">
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Advanced QR Code Scanner tool - Scan QR codes from camera, images, or URLs. Part of LinkToQR.me NEXUS toolkit.">
+  <meta name="keywords" content="qr scanner, qr code reader, barcode scanner, scan qr, LinkToQR, camera qr scanner, upload qr scanner">
+  <meta name="author" content="LinkToQR.me NEXUS">
+  
+  <!-- Social Media Meta Tags -->
+  <meta property="og:title" content="QR Code Scanner - LinkToQR.me NEXUS">
+  <meta property="og:description" content="Advanced QR Code Scanner - Scan using camera, image upload, or URL.">
+  <meta property="og:image" content="../../favicon.ico">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="QR Code Scanner - LinkToQR.me NEXUS">
+  <meta name="twitter:description" content="Advanced QR Code Scanner - Scan using camera, image upload, or URL.">
+  <meta name="twitter:image" content="../../favicon.ico">
+
+  <!-- Icons/Fonts/Styles -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared-styles.css">
+  
+  <style>
+    body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); min-height: 100vh; }
+    .tool-container { background: white; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+    .input-group { background: #f8fafc; border-radius: 12px; }
+    .camera-preview { background: #f8fafc; border-radius: 15px; border: 2px dashed #e5e7eb; position: relative; overflow: hidden; }
+    .camera-ready { border-color: #6366f1; background: #f8fafc; }
+    .scanner-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; display:flex; align-items:center; justify-content:center; }
+    .scanner-frame { width: 200px; height: 200px; border: 2px solid #6366f1; border-radius: 8px; position: relative; }
+    .scanner-frame::before { content: ''; position: absolute; top: -2px; left: -2px; width: 20px; height: 20px; border-top: 4px solid #6366f1; border-left: 4px solid #6366f1; }
+    .scanner-frame::after { content: ''; position: absolute; top: -2px; right: -2px; width: 20px; height: 20px; border-top: 4px solid #6366f1; border-right: 4px solid #6366f1; }
+    .scanner-corners::before { content: ''; position: absolute; bottom: -2px; left: -2px; width: 20px; height: 20px; border-bottom: 4px solid #6366f1; border-left: 4px solid #6366f1; }
+    .scanner-corners::after { content: ''; position: absolute; bottom: -2px; right: -2px; width: 20px; height: 20px; border-bottom: 4px solid #6366f1; border-right: 4px solid #6366f1; }
+    .drop-zone { border: 2px dashed #d1d5db; border-radius: 12px; transition: all 0.3s; }
+    .drop-zone.dragover { border-color: #6366f1; background-color: #f8fafc; }
+  </style>
+</head>
+<body class="p-4">
+  <!-- Header -->
+  <header class="futuristic-header sticky top-0 z-20 w-full py-4">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+      <a href="../../index.html" class="flex items-center">
+        <span class="text-3xl font-bold logo-text orbitron">⚡ LinkToQR.me</span>
+        <span class="text-lg font-semibold text-gray-200 ml-2">NEXUS</span>
+      </a>
+      <nav class="flex space-x-3">
+        <a href="../../index.html" class="return-home-btn"><i class="fas fa-home mr-2"></i>HOME</a>
+        <a href="../qr-generator/index.html" class="cyber-button text-sm" style="background: linear-gradient(45deg, #00ff88, #00d4aa);"><i class="fas fa-qrcode mr-2"></i>GENERATOR</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 py-10">
+    <div class="text-center mb-10">
+      <h1 class="text-5xl font-bold mb-3 orbitron text-gradient">QR SCANNER</h1>
+      <p class="text-lg text-white text-opacity-80 max-w-2xl mx-auto">Scan QR codes using your camera, upload an image, or paste an image URL. Fast and privacy-friendly.</p>
+    </div>
+
+    <div class="tool-container p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Left: Inputs -->
+      <section class="space-y-6">
+        <!-- Camera Scanner -->
+        <div class="input-group p-5">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="text-xl font-semibold text-gray-800">Camera Scanner</h2>
+            <select id="camera-select" class="border rounded px-2 py-1 text-sm"></select>
+          </div>
+          <div class="camera-preview p-4" id="camera-preview">
+            <video id="camera-video" autoplay muted playsinline class="w-full max-w-xl mx-auto rounded-lg bg-black"></video>
+            <div id="scan-overlay" class="scanner-overlay">
+              <div class="scanner-frame scanner-corners"></div>
+            </div>
+          </div>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <button id="start-camera" class="cyber-button"><i class="fas fa-camera mr-2"></i>Start</button>
+            <button id="stop-camera" class="cyber-button hidden"><i class="fas fa-stop mr-2"></i>Stop</button>
+            <button id="switch-camera" class="cyber-button hidden"><i class="fas fa-sync-alt mr-2"></i>Switch</button>
+            <button id="toggle-flashlight" class="cyber-button"><span>🔦 Flashlight Off</span></button>
+          </div>
+          <div class="mt-3 text-sm text-gray-600 flex items-center gap-2">
+            <span id="camera-status" class="text-gray-500">Camera idle</span>
+          </div>
+        </div>
+
+        <!-- Upload Image -->
+        <div class="input-group p-5">
+          <h2 class="text-xl font-semibold text-gray-800 mb-3">Upload Image</h2>
+          <div id="drop-zone" class="drop-zone p-8 text-center cursor-pointer" onclick="document.getElementById('qr-file-input').click()">
+            <i class="fas fa-image text-4xl text-gray-400 mb-3"></i>
+            <p class="text-gray-600">Drop image here or click to browse</p>
+            <input id="qr-file-input" type="file" accept="image/*" class="hidden">
+            <button id="upload-btn" class="cyber-button mt-3"><i class="fas fa-upload mr-2"></i>Choose Image</button>
+          </div>
+          <img id="upload-preview" alt="Upload preview" class="hidden mt-3 rounded-lg max-h-72 mx-auto" />
+        </div>
+
+        <!-- Scan from URL -->
+        <div class="input-group p-5">
+          <h2 class="text-xl font-semibold text-gray-800 mb-3">Scan from Image URL</h2>
+          <div class="flex gap-2">
+            <input id="image-url" type="url" placeholder="https://example.com/qr.png" class="flex-1 border rounded px-3 py-2" />
+            <button id="scan-url-btn" class="cyber-button opacity-50" disabled><i class="fas fa-link mr-2"></i>Scan URL</button>
+          </div>
+          <img id="url-preview" alt="URL preview" class="hidden mt-3 rounded-lg max-h-72 mx-auto" />
+        </div>
+
+        <!-- Settings -->
+        <div class="input-group p-5">
+          <h2 class="text-xl font-semibold text-gray-800 mb-3">Settings</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm text-gray-600 mb-1">Scan Format</label>
+              <select id="scan-format" class="w-full border rounded px-2 py-2">
+                <option value="all">All Supported</option>
+                <option value="qr">QR Code</option>
+                <option value="code128">Code 128</option>
+                <option value="ean">EAN</option>
+                <option value="data-matrix">Data Matrix</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm text-gray-600 mb-1">Scan Area</label>
+              <select id="scan-area" class="w-full border rounded px-2 py-2">
+                <option value="medium">Medium</option>
+                <option value="small">Small</option>
+                <option value="large">Large</option>
+                <option value="full">Full</option>
+              </select>
+            </div>
+            <div class="flex items-center gap-2">
+              <input id="beep-sound" type="checkbox" class="form-checkbox" checked>
+              <label for="beep-sound" class="text-sm text-gray-700">Beep on detection</label>
+            </div>
+            <div class="flex items-center gap-2">
+              <input id="auto-copy" type="checkbox" class="form-checkbox">
+              <label for="auto-copy" class="text-sm text-gray-700">Auto-copy to clipboard</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- History -->
+        <div class="input-group p-5">
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="text-xl font-semibold text-gray-800">Scan History</h2>
+            <button id="clear-scan-history" class="text-sm text-red-600 hover:text-red-700"><i class="fas fa-trash mr-1"></i>Clear</button>
+          </div>
+          <div id="scan-history" class="space-y-2 max-h-48 overflow-y-auto"></div>
+        </div>
+      </section>
+
+      <!-- Right: Results -->
+      <section class="space-y-6">
+        <div class="input-group p-5">
+          <h2 class="text-xl font-semibold text-gray-800 mb-3">Scan Result</h2>
+          <div id="scan-result" class="hidden">
+            <div class="mb-2 text-sm text-gray-600">Type: <span id="result-type" class="font-medium">-</span> • Source: <span id="result-source" class="font-medium">-</span></div>
+            <pre id="result-text" class="whitespace-pre-wrap break-words bg-white border rounded p-3 text-gray-800"></pre>
+          </div>
+          <div id="no-result" class="text-center text-gray-500">
+            <i class="fas fa-qrcode text-6xl text-gray-300 mb-3"></i>
+            <p>Scan a QR code to see results here</p>
+          </div>
+        </div>
+
+        <div class="input-group p-5">
+          <h2 class="text-xl font-semibold text-gray-800 mb-3">Actions</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <button id="copy-result" class="download-btn"><i class="fas fa-copy mr-2"></i>Copy</button>
+            <button id="open-result" class="download-btn"><i class="fas fa-external-link-alt mr-2"></i>Open</button>
+            <button id="share-result" class="download-btn"><i class="fas fa-share-alt mr-2"></i>Share</button>
+            <button id="search-result" class="download-btn"><i class="fas fa-search mr-2"></i>Search</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Loading Overlay -->
+  <div id="scanner-loading" class="hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center">
+    <div class="bg-white rounded-lg p-4 shadow-lg flex items-center gap-3">
+      <i class="fas fa-spinner fa-spin text-indigo-600"></i>
+      <p class="text-gray-700">Loading...</p>
+    </div>
+  </div>
+
+  <!-- Libraries -->
+  <script src="https://unpkg.com/@zxing/library@0.20.0/umd/index.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+  
+  <!-- Site utilities -->
+  <script src="../universal-enhancements.js"></script>
+  
+  <!-- App script -->
+  <script src="qr-scanner-enhanced.js"></script>
+</body>
+</html>

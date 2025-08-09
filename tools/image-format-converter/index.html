@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Format Converter - LinkToQR.me NEXUS</title>
+  
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
+  <link rel="stylesheet" href="../shared-styles.css">
+  <script src="../shared-utils.js"></script>
+</head>
+<body>
+  <!-- Particles.js Background -->
+  <div id="particles-js"></div>
+
+  <!-- Futuristic Header -->
+  <header class="futuristic-header sticky top-0 z-50 w-full py-4">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+      <!-- Logo -->
+      <a href="../../index.html" class="flex items-center">
+        <span class="text-3xl font-bold logo-text orbitron">⚡ LinkToQR.me</span>
+        <span class="text-lg font-semibold text-gray-400 ml-2">NEXUS</span>
+      </a>
+
+      <!-- Tool Name -->
+      <div class="hidden md:block">
+        <span class="text-xl font-semibold text-cyan-400 orbitron">FORMAT CONVERTER</span>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="flex space-x-4">
+        <a href="../../index.html" class="return-home-btn">
+          <i class="fas fa-home mr-2"></i>HOME
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 py-16">
+    <!-- Hero Section -->
+    <div class="text-center mb-16">
+      <h1 class="text-6xl font-bold mb-6 orbitron text-gradient">
+        IMAGE CONVERTER
+      </h1>
+      <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+        Convert images between different formats with quality control and batch processing
+      </p>
+    </div>    <div class="tool-layout">
+      
+      <!-- Input Section -->
+      <div class="input-section">
+        <h2 class="text-3xl font-semibold text-gradient orbitron mb-6">Upload & Settings</h2>
+        
+        <!-- Upload Area -->
+        <div class="file-upload-area" id="drop-zone">
+          <i class="fas fa-images" style="font-size: 3rem; color: rgba(255,255,255,0.3); margin-bottom: 1rem;"></i>
+          <p class="text-lg font-medium text-gray-300 mb-2">Drop images here or click to browse</p>
+          <p class="text-sm text-gray-400 mb-2">Supports: JPG, PNG, WebP, GIF, BMP, TIFF</p>
+          <p class="text-sm text-gray-400 mb-4">Real-time preview on the right →</p>
+          <input type="file" id="file-input" accept="image/*" multiple class="hidden">
+          <button onclick="document.getElementById('file-input').click()" class="cyber-button">
+            <i class="fas fa-upload mr-2"></i>Choose Images
+          </button>
+        </div>
+
+        <!-- Conversion Settings -->
+        <div class="input-group mt-4">
+          <h3 class="text-lg font-medium text-cyan-400 mb-4">Conversion Settings</h3>
+          
+          <!-- Output Format -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-300 mb-2">Output Format</label>
+            <div class="grid grid-cols-3 gap-2">
+              <button class="format-option p-3 text-center rounded-lg border-2 border-gray-600 hover:border-cyan-400 transition-all" data-format="jpeg">
+                <i class="fas fa-file-image text-xl mb-2 text-orange-400"></i>
+                <div class="text-sm font-medium">JPEG</div>
+              </button>
+              <button class="format-option p-3 text-center rounded-lg border-2 border-gray-600 hover:border-cyan-400 transition-all" data-format="png">
+                <i class="fas fa-file-image text-xl mb-2 text-blue-400"></i>
+                <div class="text-sm font-medium">PNG</div>
+              </button>
+              <button class="format-option p-3 text-center rounded-lg border-2 border-gray-600 hover:border-cyan-400 transition-all" data-format="webp">
+                <i class="fas fa-file-image text-xl mb-2 text-green-400"></i>
+                <div class="text-sm font-medium">WebP</div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Quality Slider -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-300 mb-2">Quality</label>
+            <input type="range" id="quality-slider" min="10" max="100" value="90" class="w-full">
+            <div class="flex justify-between text-xs text-gray-400">
+              <span>Low</span>
+              <span id="quality-value">90%</span>
+              <span>High</span>
+            </div>
+          </div>
+
+          <!-- Multiple Images Queue -->
+          <div id="image-queue" class="hidden mb-4">
+            <label class="block text-sm font-medium text-gray-300 mb-2">Selected Images</label>
+            <div id="image-list" class="space-y-2 max-h-40 overflow-y-auto">
+              <!-- Image list will be populated here -->
+            </div>
+          </div>
+
+          <!-- Convert Button -->
+          <button id="convert-btn" class="cyber-button w-full">
+            <i class="fas fa-magic mr-2"></i>Convert Images
+          </button>
+        </div>
+      </div>
+
+      <!-- Output Section -->
+      <div class="output-section">
+        <h2 class="text-3xl font-semibold text-gradient orbitron mb-6">Real-time Preview</h2>
+        
+        <!-- No Image State -->
+        <div id="no-image-state" class="output-preview text-center">
+          <i class="fas fa-image text-6xl text-gray-600 mb-4"></i>
+          <p class="text-gray-400 text-lg">Upload an image to see live preview</p>
+          <p class="text-gray-500 text-sm">Changes will update instantly</p>
+        </div>
+
+        <!-- Live Preview -->
+        <div id="live-preview" class="hidden">
+          <!-- Original Image -->
+          <div class="output-preview mb-4">
+            <h3 class="text-lg font-medium text-cyan-400 mb-3">Original Image</h3>
+            <div id="original-container" class="text-center">
+              <!-- Original image preview -->
+            </div>
+          </div>
+
+          <!-- Converted Preview -->
+          <div class="output-preview">
+            <h3 class="text-lg font-medium text-green-400 mb-3">Converted Preview</h3>
+            <div id="converted-container" class="text-center">
+              <!-- Converted image preview -->
+            </div>
+            <div id="conversion-details" class="mt-4 space-y-2 text-sm">
+              <!-- Conversion details -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Section -->
+        <div id="progress-section" class="progress-container hidden">
+          <div class="progress-bar" id="progress-bar"></div>
+          <p id="progress-text" class="text-center text-sm text-gray-400 mt-2">Processing...</p>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results-section" class="hidden">
+          <h3 class="text-lg font-medium text-green-400 mb-3">Download Results</h3>
+          <div id="results-list" class="space-y-2">
+            <!-- Results will be populated here -->
+          </div>
+          
+          <button id="download-all-btn" class="download-btn w-full mt-4 hidden">
+            <i class="fas fa-download mr-2"></i>Download All as ZIP
+          </button>
+        </div>
+      </div>
+    </div>  </main>
+  <script src="image-format-converter-fixed.js"></script>
+  <script src="../universal-enhancements.js"></script>
+</body>
+</html>

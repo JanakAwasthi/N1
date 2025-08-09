@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Compressor - LinkToQR.me NEXUS</title>
+  
+  <!-- Favicon and Google AdSense -->
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <meta name="google-adsense-account" content="ca-pub-6126558809611102">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6126558809611102"
+     crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
+  <link rel="stylesheet" href="../shared-styles.css">
+  <script src="../shared-utils.js"></script>
+  <style>
+    :root {
+      --primary: #00d4ff;
+      --primary-dark: #0099cc;
+      --secondary: #ff0080;
+      --accent: #7c3aed;
+      --success: #00ff88;
+      --warning: #ffaa00;
+      --error: #ff0040;
+      --neon-blue: #00d4ff;
+      --neon-pink: #ff0080;
+      --neon-purple: #8000ff;
+      --dark-bg: #0a0a0a;
+      --dark-surface: #1a1a1a;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Exo 2', sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #000a1a 100%);
+      color: #ffffff;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 0, 128, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(128, 0, 255, 0.1) 0%, transparent 50%);
+      animation: backgroundShift 20s ease-in-out infinite;
+      z-index: -1;
+    }
+
+    @keyframes backgroundShift {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+
+    .orbitron { font-family: 'Orbitron', monospace; }
+
+    /* Futuristic Header */
+    .futuristic-header {
+      background: rgba(10, 10, 10, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+      box-shadow: 0 4px 30px rgba(0, 212, 255, 0.2);
+    }
+
+    .logo-text {
+      background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+    }
+
+    /* Cyber Buttons */
+    .cyber-button {
+      background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink));
+      border: none;
+      border-radius: 25px;
+      padding: 12px 30px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+    }
+
+    .cyber-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .cyber-button:hover::before {
+      left: 100%;
+    }
+
+    .cyber-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 30px rgba(0, 212, 255, 0.6);
+    }
+
+    /* Tool Container */
+    .tool-container {
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(0, 212, 255, 0.2);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 25px 50px rgba(0, 212, 255, 0.1);
+    }
+
+    .dropzone {
+      border: 3px dashed rgba(0, 212, 255, 0.3);
+      border-radius: 15px;
+      transition: all 0.3s ease;
+      background: rgba(0, 212, 255, 0.02);
+      padding: 3rem;
+      text-align: center;
+    }
+
+    .dropzone.active {
+      border-color: var(--success);
+      background: rgba(0, 255, 136, 0.05);
+      box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+    }
+
+    .file-info {
+      background: rgba(0, 212, 255, 0.05);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 10px;
+      padding: 1rem;
+    }
+
+    .preview-container {
+      border-radius: 15px;
+      overflow: hidden;
+      border: 2px solid rgba(0, 212, 255, 0.3);
+    }
+
+    .control-group {
+      background: rgba(0, 212, 255, 0.05);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    /* Particles container */
+    #particles-js {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+  </style>
+</head>
+<body class="cyber-bg">
+  <!-- Particles.js Background -->
+  <div id="particles-js"></div>
+
+  <!-- Futuristic Header -->
+  <header class="futuristic-header sticky top-0 z-50 w-full py-4">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+      <!-- Logo -->
+      <a href="../../index.html" class="flex items-center">
+        <span class="text-3xl font-bold logo-text orbitron">⚡ LinkToQR.me</span>
+        <span class="text-lg font-semibold text-gray-400 ml-2">NEXUS</span>
+      </a>
+
+      <!-- Tool Name -->
+      <div class="hidden md:block">
+        <span class="text-xl font-semibold text-cyan-400 orbitron">IMAGE COMPRESSOR</span>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="flex space-x-4">
+        <a href="../../index.html" class="cyber-button text-sm">
+          <i class="fas fa-home mr-2"></i>HOME
+        </a>
+        <div class="relative group">
+          <button class="cyber-button text-sm flex items-center">
+            <i class="fas fa-images mr-2"></i>IMAGE TOOLS
+            <i class="fas fa-chevron-down ml-1"></i>
+          </button>
+          <div class="absolute right-0 mt-2 w-56 bg-gray-900 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+            <div class="py-2">
+              <a href="../image-collage-maker/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-th mr-2"></i>Collage Maker
+              </a>
+              <a href="../image-resizer/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-expand-arrows-alt mr-2"></i>Image Resizer
+              </a>
+              <a href="../image-format-converter/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-exchange-alt mr-2"></i>Format Converter
+              </a>
+              <a href="../image-enhancer/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-magic mr-2"></i>Image Enhancer
+              </a>
+              <a href="../image-cropper/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-crop mr-2"></i>Image Cropper
+              </a>
+              <a href="../image-merger/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-layer-group mr-2"></i>Image Merger
+              </a>
+              <a href="../image-background-remover/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-cut mr-2"></i>Background Remover
+              </a>
+              <a href="../image-resolution-changer/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-tv mr-2"></i>Resolution Changer
+              </a>
+              <a href="../id-photo-maker/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-id-card mr-2"></i>ID Photo Maker
+              </a>
+              <a href="../watermark-remover/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-eraser mr-2"></i>Watermark Remover
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="relative group">
+          <button class="cyber-button text-sm flex items-center">
+            <i class="fas fa-file-alt mr-2"></i>DOC TOOLS
+            <i class="fas fa-chevron-down ml-1"></i>
+          </button>
+          <div class="absolute right-0 mt-2 w-56 bg-gray-900 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+            <div class="py-2">
+              <a href="../document-text-extractor/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-file-export mr-2"></i>Text Extractor
+              </a>
+              <a href="../document-watermark/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-stamp mr-2"></i>Document Watermark
+              </a>
+              <a href="../document-scanner/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-scanner mr-2"></i>Document Scanner
+              </a>
+              <a href="../pdf-converter/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-file-pdf mr-2"></i>PDF Converter
+              </a>
+              <a href="../pdf-merger/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-layer-group mr-2"></i>PDF Merger
+              </a>
+              <a href="../photo-to-pdf/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-images mr-2"></i>Photo to PDF
+              </a>
+              <a href="../digital-signature/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-signature mr-2"></i>Digital Signature
+              </a>
+            </div>
+          </div>
+        </div>
+        <a href="../qr-generator/index.html" class="cyber-button text-sm" style="background: linear-gradient(45deg, #ffaa00, #ff6b00);">
+          <i class="fas fa-qrcode mr-2"></i>QR TOOLS
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 py-16">
+    <!-- Hero Section -->
+    <div class="text-center mb-16">
+      <h1 class="text-6xl font-bold mb-6 orbitron" style="background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+        IMAGE COMPRESSOR
+      </h1>
+      <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+        Advanced image compression with quality control and real-time preview
+      </p>
+    </div>    <div class="tool-layout">
+      
+      <!-- Input Section -->
+      <div class="input-section">
+        <h2 class="text-3xl font-semibold text-gradient orbitron mb-6">Input & Settings</h2>
+        
+        <div class="file-upload-area" id="dropzone">
+          <i class="fas fa-compress-alt" style="font-size: 3rem; color: rgba(255,255,255,0.3); margin-bottom: 1rem;"></i>
+          <p class="text-lg font-medium text-gray-300 mb-2">Drag & Drop Image Here</p>
+          <p class="text-sm text-gray-400 mb-4">or click to browse</p>
+          <input type="file" id="image-input" accept="image/*" class="hidden">
+          <button onclick="document.getElementById('image-input').click()" 
+                  class="cyber-button">
+            <i class="fas fa-file-image mr-2"></i>Choose File
+          </button>
+        </div>
+
+        <div id="original-preview" class="hidden mt-4">
+          <h3 class="text-lg font-medium text-cyan-400 mb-3">Original Image</h3>
+          <div class="preview-container bg-gray-800 bg-opacity-50 p-4 rounded-lg border border-gray-600">
+            <img id="original-image" class="max-w-full h-auto mx-auto rounded" />
+          </div>
+        </div>
+
+        <div id="compression-controls" class="hidden input-group mt-4">
+          <h3 class="text-lg font-medium text-cyan-400 mb-4">Compression Settings</h3>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Quality Level</label>
+              <input type="range" id="quality" min="10" max="100" value="80" class="w-full">
+              <div class="flex justify-between text-xs text-gray-400">
+                <span>High Compression</span>
+                <span id="quality-value">80%</span>
+                <span>Best Quality</span>
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Output Format</label>
+              <select id="output-format" class="cyber-input">
+                <option value="jpeg">JPEG (Lossy)</option>
+                <option value="png">PNG (Lossless)</option>
+                <option value="webp">WebP (Modern)</option>
+              </select>
+            </div>
+            <div class="flex items-center space-x-4">
+              <label class="flex items-center text-gray-300">
+                <input type="checkbox" id="progressive" class="mr-2">
+                <span class="text-sm font-medium">Progressive JPEG</span>
+              </label>
+              <label class="flex items-center text-gray-300">
+                <input type="checkbox" id="optimize" checked class="mr-2">
+                <span class="text-sm font-medium">Optimize</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Output Section -->
+      <div class="output-section">
+        <h2 class="text-3xl font-semibold text-gradient orbitron mb-6">Output & Download</h2>
+        
+        <div class="output-preview" id="output-preview-container">
+          <i class="fas fa-image" style="font-size: 3rem; color: rgba(255,255,255,0.3); margin-bottom: 1rem;"></i>
+          <p style="color: rgba(255,255,255,0.5);">Compressed image will appear here</p>
+          <div id="output-preview" class="hidden">
+            <img id="compressed-image" class="max-w-full h-auto mx-auto rounded" />
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container hidden">
+          <div class="progress-bar"></div>
+        </div>
+
+        <!-- Output Details -->
+        <div class="output-details" id="output-details">
+          <!-- Details will be populated by JavaScript -->
+        </div>
+
+        <!-- Download Section -->
+        <div id="download-section" class="hidden">
+          <button id="download-btn" class="download-btn w-full">
+            <i class="fas fa-download mr-2"></i>
+            Download Compressed Image
+          </button>
+        </div>
+      </div>
+    </div>
+
+  <script>
+    // Initialize Particles.js background
+    document.addEventListener('DOMContentLoaded', function() {
+      tsParticles.load("particles-js", {
+        particles: {
+          number: {
+            value: 60,
+            density: {
+              enable: true,
+              value_area: 800
+            }
+          },
+          color: {
+            value: "#00d4ff"
+          },
+          shape: {
+            type: "circle"
+          },
+          opacity: {
+            value: 0.1,
+            random: false
+          },
+          size: {
+            value: 3,
+            random: true
+          },
+          line_linked: {
+            enable: true,
+            distance: 150,
+            color: "#00d4ff",
+            opacity: 0.2,
+            width: 1
+          },
+          move: {
+            enable: true,
+            speed: 2,
+            direction: "none",
+            random: false,
+            straight: false,
+            out_mode: "out",
+            bounce: false
+          }
+        },
+        interactivity: {
+          detect_on: "canvas",
+          events: {
+            onhover: {
+              enable: true,
+              mode: "grab"
+            },
+            onclick: {
+              enable: true,
+              mode: "push"
+            },
+            resize: true
+          },
+          modes: {
+            grab: {
+              distance: 140,
+              line_linked: {
+                opacity: 1
+              }
+            },
+            push: {
+              particles_nb: 4
+            }
+          }
+        },
+        retina_detect: true
+      });
+    });
+  </script>
+  <script src="image-compressor-enhanced.js"></script>
+</body>
+</html>

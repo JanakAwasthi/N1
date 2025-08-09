@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Signature - LinkToQR.me Toolkit</title>  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared-styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <style>
+    body { 
+      font-family: 'Poppins', sans-serif; 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+      min-height: 100vh; 
+    }
+    .tool-container { 
+      background: white; 
+      border-radius: 20px; 
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
+    }
+    .signature-pad { 
+      border: 2px solid #e5e7eb; 
+      border-radius: 12px; 
+      background: white; 
+      cursor: crosshair; 
+    }
+    .signature-pad:focus { 
+      border-color: #3b82f6; 
+      outline: none; 
+    }
+    .signature-tools { 
+      background: #f8fafc; 
+      border-radius: 12px; 
+      border: 1px solid #e2e8f0; 
+    }
+    .color-picker { 
+      width: 40px; 
+      height: 40px; 
+      border-radius: 50%; 
+      border: 3px solid white; 
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
+      cursor: pointer; 
+      transition: all 0.3s ease; 
+    }
+    .color-picker.active { 
+      border-color: #3b82f6; 
+      transform: scale(1.1); 
+    }
+    .dropzone { 
+      border: 3px dashed #e5e7eb; 
+      border-radius: 15px; 
+      transition: all 0.3s ease; 
+      background: #f9fafb; 
+    }
+    .dropzone.active { 
+      border-color: #3b82f6; 
+      background: #dbeafe; 
+    }
+    .signature-preview { 
+      background: #f8fafc; 
+      border-radius: 12px; 
+      border: 2px solid #e5e7eb; 
+    }
+    .feature-card {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border-radius: 12px;
+      border: 1px solid #0ea5e9;
+    }
+  </style>
+</head>
+<body class="p-4">
+  <!-- Navigation Header -->
+  <nav class="mb-6">
+    <div class="max-w-6xl mx-auto">
+      <div class="bg-white bg-opacity-90 backdrop-blur-sm rounded-xl p-4 shadow-lg">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4">
+            <a href="../../index.html" class="text-2xl font-bold text-purple-600 hover:text-purple-700 transition-colors">
+              <i class="fas fa-arrow-left mr-2"></i>LinkToQR.me
+            </a>
+            <span class="text-gray-400">|</span>
+            <h2 class="text-xl font-semibold text-gray-800">Digital Signature</h2>
+          </div>
+          <div class="flex items-center space-x-3">
+            <a href="../../index.html" class="px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors text-sm">
+              <i class="fas fa-home mr-2"></i>Home
+            </a>
+            <a href="../pdf-merger/index.html" class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors text-sm">
+              <i class="fas fa-file-pdf mr-2"></i>PDF Tools
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold text-white mb-2">
+        <i class="fas fa-signature mr-3"></i>Digital Signature
+      </h1>
+      <p class="text-white opacity-90">Create, customize, and apply digital signatures to your documents</p>
+    </div>
+
+    <div class="tool-container p-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        
+        <!-- Signature Creation Section -->
+        <div class="space-y-6">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-4">
+            <i class="fas fa-pen-fancy mr-2 text-blue-600"></i>Create Signature
+          </h2>
+
+          <!-- Signature Tabs -->
+          <div class="flex space-x-1 bg-gray-100 p-1 rounded-lg">
+            <button class="signature-tab flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all active" data-tab="draw">
+              <i class="fas fa-pen mr-2"></i>Draw
+            </button>
+            <button class="signature-tab flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all" data-tab="type">
+              <i class="fas fa-keyboard mr-2"></i>Type
+            </button>
+            <button class="signature-tab flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all" data-tab="upload">
+              <i class="fas fa-upload mr-2"></i>Upload
+            </button>
+          </div>
+
+          <!-- Draw Tab -->
+          <div id="draw-tab" class="signature-tab-content">
+            <div class="signature-tools p-4 mb-4">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="font-medium text-gray-700">Drawing Tools</h3>
+                <button id="clear-signature" class="px-3 py-1 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-all text-sm">
+                  <i class="fas fa-eraser mr-1"></i>Clear
+                </button>
+              </div>
+              
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-600 mb-2">Pen Size</label>
+                  <input type="range" id="pen-size" min="1" max="10" value="3" class="w-full">
+                  <div class="flex justify-between text-xs text-gray-500">
+                    <span>1px</span>
+                    <span id="pen-size-value">3px</span>
+                    <span>10px</span>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-600 mb-2">Colors</label>
+                  <div class="flex space-x-2">
+                    <div class="color-picker active" style="background-color: #000000" data-color="#000000"></div>
+                    <div class="color-picker" style="background-color: #1e40af" data-color="#1e40af"></div>
+                    <div class="color-picker" style="background-color: #dc2626" data-color="#dc2626"></div>
+                    <div class="color-picker" style="background-color: #059669" data-color="#059669"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="relative">
+              <canvas id="signature-pad" class="signature-pad w-full" width="600" height="300"></canvas>
+              <div class="absolute bottom-2 right-2 text-xs text-gray-400">Sign here</div>
+            </div>
+          </div>
+
+          <!-- Type Tab -->
+          <div id="type-tab" class="signature-tab-content hidden">
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Enter your signature text</label>
+                <input type="text" id="signature-text" placeholder="Enter your name" 
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Font Style</label>
+                  <select id="font-style" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <option value="cursive">Cursive</option>
+                    <option value="serif">Serif</option>
+                    <option value="sans-serif">Sans Serif</option>
+                    <option value="monospace">Monospace</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Font Size</label>
+                  <input type="range" id="font-size" min="20" max="80" value="40" class="w-full">
+                  <div class="text-center text-sm text-gray-500">
+                    <span id="font-size-value">40px</span>
+                  </div>
+                </div>
+              </div>
+              <div id="typed-signature-preview" class="signature-preview p-4 text-center min-h-[100px] flex items-center justify-center">
+                <span class="text-gray-400">Your signature will appear here</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Upload Tab -->
+          <div id="upload-tab" class="signature-tab-content hidden">
+            <div class="dropzone p-8 text-center" id="signature-dropzone">
+              <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
+              <p class="text-lg font-medium text-gray-600 mb-2">Upload Signature Image</p>
+              <p class="text-sm text-gray-500 mb-4">PNG, JPG, or SVG format</p>
+              <input type="file" id="signature-upload" accept="image/*" class="hidden">
+              <button onclick="document.getElementById('signature-upload').click()" 
+                      class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all">
+                Choose File
+              </button>
+            </div>
+            <div id="uploaded-signature-preview" class="hidden signature-preview p-4 text-center">
+              <img id="uploaded-signature" class="max-w-full max-h-32 mx-auto" />
+            </div>
+          </div>
+
+          <!-- Signature Actions -->
+          <div id="signature-actions" class="space-y-3">
+            <button id="save-signature" class="w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all font-medium">
+              <i class="fas fa-save mr-2"></i>Save Signature
+            </button>
+            <div class="grid grid-cols-2 gap-3">
+              <button id="download-signature" class="py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-all text-sm">
+                <i class="fas fa-download mr-2"></i>Download PNG
+              </button>
+              <button id="copy-signature" class="py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-all text-sm">
+                <i class="fas fa-copy mr-2"></i>Copy to Clipboard
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Document Application Section -->
+        <div class="space-y-6">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-4">
+            <i class="fas fa-file-signature mr-2 text-blue-600"></i>Apply to Document
+          </h2>
+
+          <!-- PDF Upload -->
+          <div class="dropzone p-6 text-center" id="pdf-dropzone">
+            <i class="fas fa-file-pdf text-4xl text-red-500 mb-4"></i>
+            <p class="text-lg font-medium text-gray-600 mb-2">Upload PDF Document</p>
+            <p class="text-sm text-gray-500 mb-4">Drop your PDF here or click to browse</p>
+            <input type="file" id="pdf-upload" accept="application/pdf" class="hidden">
+            <button onclick="document.getElementById('pdf-upload').click()" 
+                    class="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all">
+              Choose PDF
+            </button>
+          </div>
+
+          <!-- PDF Preview -->
+          <div id="pdf-preview-section" class="hidden">
+            <h3 class="font-medium text-gray-700 mb-3">Document Preview</h3>
+            <div class="bg-gray-100 p-4 rounded-lg">
+              <div id="pdf-info" class="text-sm text-gray-600 mb-3"></div>
+              <div class="relative bg-white border rounded-lg overflow-hidden">
+                <canvas id="pdf-canvas" class="w-full"></canvas>
+                <div id="signature-overlay" class="absolute top-0 left-0 w-full h-full pointer-events-none">
+                  <!-- Signature placement overlay -->
+                </div>
+              </div>
+              <div class="flex justify-between items-center mt-3">
+                <div class="flex space-x-2">
+                  <button id="prev-page" class="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-all">
+                    <i class="fas fa-chevron-left"></i>
+                  </button>
+                  <span id="page-info" class="px-3 py-1 text-sm text-gray-600">Page 1 of 1</span>
+                  <button id="next-page" class="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-all">
+                    <i class="fas fa-chevron-right"></i>
+                  </button>
+                </div>
+                <button id="add-signature-to-pdf" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all">
+                  <i class="fas fa-plus mr-2"></i>Add Signature
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Signature Position Controls -->
+          <div id="position-controls" class="hidden feature-card p-4">
+            <h3 class="font-medium text-blue-800 mb-3">
+              <i class="fas fa-crosshairs mr-2"></i>Signature Position
+            </h3>
+            <div class="grid grid-cols-2 gap-3 text-sm">
+              <div>
+                <label class="block text-blue-700 mb-1">X Position (%)</label>
+                <input type="range" id="sig-x" min="0" max="100" value="70" class="w-full">
+              </div>
+              <div>
+                <label class="block text-blue-700 mb-1">Y Position (%)</label>
+                <input type="range" id="sig-y" min="0" max="100" value="80" class="w-full">
+              </div>
+              <div>
+                <label class="block text-blue-700 mb-1">Width (%)</label>
+                <input type="range" id="sig-width" min="5" max="50" value="20" class="w-full">
+              </div>
+              <div>
+                <label class="block text-blue-700 mb-1">Page</label>
+                <input type="number" id="sig-page" min="1" value="1" class="w-full px-2 py-1 border border-blue-300 rounded">
+              </div>
+            </div>
+          </div>
+
+          <!-- Final Actions -->
+          <div id="final-actions" class="hidden space-y-3">
+            <button id="apply-signature" class="w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all font-medium">
+              <i class="fas fa-stamp mr-2"></i>Apply Signature to PDF
+            </button>
+            <div class="grid grid-cols-2 gap-3">
+              <button id="download-signed-pdf" class="py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-all text-sm">
+                <i class="fas fa-download mr-2"></i>Download PDF
+              </button>
+              <button id="reset-tool" class="py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all text-sm">
+                <i class="fas fa-refresh mr-2"></i>Start Over
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Help Section -->
+      <div class="mt-8 bg-blue-50 border border-blue-200 p-6 rounded-xl">
+        <h3 class="text-lg font-semibold text-blue-800 mb-4">
+          <i class="fas fa-lightbulb mr-2"></i>How to Use
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-blue-700">
+          <div class="flex items-start space-x-3">
+            <i class="fas fa-pen text-blue-500 mt-1"></i>
+            <div>
+              <p class="font-medium">1. Create Signature</p>
+              <p>Draw, type, or upload your signature</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <i class="fas fa-file-pdf text-blue-500 mt-1"></i>
+            <div>
+              <p class="font-medium">2. Upload Document</p>
+              <p>Select the PDF file you want to sign</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <i class="fas fa-stamp text-blue-500 mt-1"></i>
+            <div>
+              <p class="font-medium">3. Apply & Download</p>
+              <p>Position your signature and download</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="../shared-utils.js"></script>
+  <script src="../universal-enhancements.js"></script>
+  <!-- Use enhanced script for precise pen/cursor alignment -->
+  <script src="digital-signature-enhanced.js"></script>
+</body>
+</html>

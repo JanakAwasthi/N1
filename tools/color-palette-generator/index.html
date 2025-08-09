@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6126558809611102" 
+            crossorigin="anonymous"></script>
+    <meta name="google-adsense-account" content="ca-pub-6126558809611102">
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Palette Generator - LinkToQR.me NEXUS</title>
+    <meta name="description" content="Generate beautiful color palettes for your design projects. Create harmonious color schemes with our professional color palette generator tool.">
+    <meta name="keywords" content="color palette, color generator, design colors, hex colors, rgb colors, color scheme, color picker">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="../shared-styles.css">
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+    
+    <style>
+        .color-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .color-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        .palette-type-active {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .color-preview {
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
+        <div class="max-w-6xl mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <a href="../../index.html" class="flex items-center space-x-2 text-gray-700 hover:text-blue-600 transition-colors">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Back to Tools</span>
+                    </a>
+                </div>
+                <h1 class="text-2xl font-bold text-gray-800">Color Palette Generator</h1>
+                <div class="w-24"></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        <!-- AdSense Display Ad -->
+        <div class="flex justify-center mb-8">
+            <!-- Display Ad -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-6126558809611102"
+                 data-ad-slot="1234567890"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+
+        <!-- Tool Description -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="text-center">
+                <i class="fas fa-palette text-4xl text-blue-500 mb-4"></i>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Professional Color Palette Generator</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    Create stunning color palettes for your design projects. Generate harmonious color schemes using various color theory principles and export them in multiple formats.
+                </p>
+            </div>
+        </div>
+
+        <!-- Generator Controls -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h3 class="text-xl font-semibold text-gray-800 mb-6">Generate Palette</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Base Color Input -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Base Color</label>
+                    <div class="flex space-x-2">
+                        <input type="color" id="baseColor" value="#3b82f6" class="w-12 h-10 rounded border border-gray-300">
+                        <input type="text" id="baseColorHex" value="#3b82f6" placeholder="#ffffff" 
+                               class="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm">
+                    </div>
+                </div>
+
+                <!-- Palette Type -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Palette Type</label>
+                    <select id="paletteType" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="monochromatic">Monochromatic</option>
+                        <option value="analogous">Analogous</option>
+                        <option value="complementary">Complementary</option>
+                        <option value="triadic">Triadic</option>
+                        <option value="tetradic">Tetradic</option>
+                        <option value="split-complementary">Split Complementary</option>
+                    </select>
+                </div>
+
+                <!-- Number of Colors -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Colors Count: <span id="colorCountValue">5</span>
+                    </label>
+                    <input type="range" id="colorCount" min="3" max="8" value="5" 
+                           class="w-full accent-blue-500">
+                </div>
+
+                <!-- Generate Button -->
+                <div class="flex items-end">
+                    <button onclick="generatePalette()" 
+                            class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition-colors">
+                        <i class="fas fa-magic mr-2"></i>Generate
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Generated Palette -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-semibold text-gray-800">Generated Palette</h3>
+                <div class="flex space-x-2">
+                    <button onclick="exportPalette('css')" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded text-sm">
+                        <i class="fas fa-download mr-1"></i>CSS
+                    </button>
+                    <button onclick="exportPalette('json')" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded text-sm">
+                        <i class="fas fa-download mr-1"></i>JSON
+                    </button>
+                    <button onclick="exportPalette('ase')" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded text-sm">
+                        <i class="fas fa-download mr-1"></i>ASE
+                    </button>
+                </div>
+            </div>
+            
+            <div id="paletteContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                <!-- Colors will be generated here -->
+            </div>
+        </div>
+
+        <!-- Color Harmony Information -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Color Harmony Guide</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="border rounded-lg p-4">
+                    <h4 class="font-semibold text-gray-800 mb-2">Monochromatic</h4>
+                    <p class="text-sm text-gray-600">Uses different shades, tones, and tints of a single color. Creates a harmonious and calming effect.</p>
+                </div>
+                <div class="border rounded-lg p-4">
+                    <h4 class="font-semibold text-gray-800 mb-2">Analogous</h4>
+                    <p class="text-sm text-gray-600">Uses colors that are next to each other on the color wheel. Creates a sense of harmony and unity.</p>
+                </div>
+                <div class="border rounded-lg p-4">
+                    <h4 class="font-semibold text-gray-800 mb-2">Complementary</h4>
+                    <p class="text-sm text-gray-600">Uses colors opposite each other on the color wheel. Creates high contrast and vibrant look.</p>
+                </div>
+                <div class="border rounded-lg p-4">
+                    <h4 class="font-semibold text-gray-800 mb-2">Triadic</h4>
+                    <p class="text-sm text-gray-600">Uses three colors equally spaced on the color wheel. Offers high contrast while retaining harmony.</p>
+                </div>
+                <div class="border rounded-lg p-4">
+                    <h4 class="font-semibold text-gray-800 mb-2">Tetradic</h4>
+                    <p class="text-sm text-gray-600">Uses four colors arranged into two complementary pairs. Rich in variety with many possibilities.</p>
+                </div>
+                <div class="border rounded-lg p-4">
+                    <h4 class="font-semibold text-gray-800 mb-2">Split Complementary</h4>
+                    <p class="text-sm text-gray-600">Uses a base color and two colors adjacent to its complement. Less tension than complementary.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Palette History -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-semibold text-gray-800">Palette History</h3>
+                <button onclick="clearHistory()" class="text-red-500 hover:text-red-700 text-sm">
+                    <i class="fas fa-trash mr-1"></i>Clear History
+                </button>
+            </div>
+            <div id="paletteHistory" class="space-y-4">
+                <!-- History will be populated here -->
+            </div>
+        </div>
+
+        <!-- AdSense Display Ad -->
+        <div class="flex justify-center mt-8">
+            <!-- Display Ad -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-6126558809611102"
+                 data-ad-slot="1234567890"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <div class="mb-4">
+                <h3 class="text-lg font-semibold mb-2">LinkToQR.me NEXUS</h3>
+                <p class="text-gray-400">Professional Color Palette Generator Tool</p>
+            </div>
+            <div class="flex justify-center space-x-6 text-sm">
+                <a href="../../index.html" class="hover:text-blue-400 transition-colors">Home</a>
+                <a href="../../privacy-policy.html" class="hover:text-blue-400 transition-colors">Privacy Policy</a>
+                <a href="../../how-to-use.html" class="hover:text-blue-400 transition-colors">How to Use</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../shared-utils.js"></script>
+    <script src="color-palette-generator.js"></script>
+    
+    <!-- Initialize AdSense -->
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</body>
+</html>

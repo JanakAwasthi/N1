@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔐 Store Text - Secure Text Storage | LinkToQR.me NEXUS</title>
+  
+  <!-- Favicon and App Icons -->
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../favicon.ico">
+  
+  <!-- Google AdSense -->
+  <meta name="google-adsense-account" content="ca-pub-6126558809611102">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6126558809611102"
+     crossorigin="anonymous"></script>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Secure text storage with multi-window support, password protection, and auto-save features. Store notes safely with LinkToQR.me NEXUS.">
+  <meta name="keywords" content="secure text storage, password protected notes, multi-window editor, LinkToQR, NEXUS">
+  <meta name="author" content="LinkToQR.me NEXUS">
+  
+  <!-- Social Media Meta Tags -->
+  <meta property="og:title" content="🔐 Store Text - Secure Text Storage | LinkToQR.me NEXUS">
+  <meta property="og:description" content="Secure text storage with multi-window support and password protection">
+  <meta property="og:image" content="../../favicon.ico">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="🔐 Store Text - Secure Text Storage | LinkToQR.me NEXUS">
+  <meta name="twitter:description" content="Secure text storage with multi-window support and password protection">
+  <meta name="twitter:image" content="../../favicon.ico">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <style>
+    :root {
+      --primary: #00d4ff;
+      --secondary: #ff0080;
+      --accent: #7c3aed;
+      --success: #00ff88;
+      --warning: #ffaa00;
+      --error: #ff0040;
+      --neon-blue: #00d4ff;
+      --neon-pink: #ff0080;
+      --neon-purple: #8000ff;
+      --dark-bg: #0a0a0a;
+      --dark-surface: #1a1a1a;
+    }
+
+    [data-theme="dark"] {
+      --background: var(--dark-bg);
+      --surface: var(--dark-surface);
+      --text: #ffffff;
+      --text-secondary: #b0b0b0;
+      --border: #333333;
+    }
+
+    [data-theme="light"] {
+      --background: #f0f8ff;
+      --surface: #ffffff;
+      --text: #1a1a1a;
+      --text-secondary: #666666;
+      --border: #e0e0e0;
+    }
+
+    body {
+      font-family: 'Exo 2', sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #000a1a 100%);
+      color: var(--text);
+      min-height: 100vh;
+      transition: all 0.3s ease;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+      padding-bottom: 200px; /* Extra space for ads */
+    }
+
+    .orbitron { font-family: 'Orbitron', monospace; }
+
+    .cyber-bg {
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #000a1a 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cyber-bg::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 20%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 0, 128, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .cyber-card {
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+      margin-bottom: 20px;
+    }
+
+    .cyber-card:hover {
+      border-color: var(--neon-blue);
+      box-shadow: 0 12px 48px rgba(0, 212, 255, 0.2);
+    }
+
+    .cyber-button {
+      background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink));
+      border: none;
+      border-radius: 50px;
+      padding: 12px 30px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+    }
+
+    .cyber-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 30px rgba(0, 212, 255, 0.6);
+    }
+
+    .cyber-button.secondary {
+      background: linear-gradient(45deg, #333, #555);
+    }
+
+    .cyber-button.danger {
+      background: linear-gradient(45deg, #ff0040, #ff6b00);
+    }
+
+    .cyber-input {
+      background: rgba(26, 26, 26, 0.8);
+      border: 2px solid rgba(0, 212, 255, 0.3);
+      border-radius: 15px;
+      padding: 15px 20px;
+      color: #ffffff;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .cyber-input:focus {
+      outline: none;
+      border-color: var(--neon-blue);
+      box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    .cyber-input::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 400;
+    }
+
+    .cyber-textarea {
+      background: rgba(26, 26, 26, 0.8);
+      border: 2px solid rgba(0, 212, 255, 0.3);
+      border-radius: 15px;
+      padding: 20px;
+      color: #ffffff;
+      font-size: 16px;
+      font-family: 'Monaco', 'Courier New', monospace;
+      transition: all 0.3s ease;
+      resize: vertical;
+      min-height: 400px;
+      font-weight: 500;
+      line-height: 1.6;
+    }
+
+    .cyber-textarea:focus {
+      outline: none;
+      border-color: var(--neon-blue);
+      box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    .cyber-textarea::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 400;
+    }
+
+    .note-item {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 15px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .note-item:hover {
+      background: rgba(0, 212, 255, 0.1);
+      border-color: var(--neon-blue);
+      transform: translateX(5px);
+    }
+
+    .note-item.active {
+      border-color: var(--neon-pink);
+      background: rgba(255, 0, 128, 0.1);
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--dark-surface);
+      border: 2px solid var(--neon-blue);
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 500px;
+      width: 90%;
+    }
+
+    .hidden { display: none !important; }
+
+    /* Scroll enhancements */
+    ::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 6px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink));
+      border-radius: 6px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue));
+    }
+
+    /* Animation for new windows */
+    .editor-window {
+      animation: slideInFromRight 0.3s ease-out;
+    }
+
+    @keyframes slideInFromRight {
+      from {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Enhanced hover effects */
+    .window-header {
+      transition: all 0.3s ease;
+    }
+
+    .window-header:hover {
+      color: var(--neon-blue) !important;
+      text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+    }
+  </style>
+</head>
+<body class="cyber-bg">
+  <div class="container">
+    <!-- Back to Home Button -->
+    <div class="mb-6">
+      <a href="../../index.html" class="cyber-button secondary inline-flex items-center">
+        <i class="fas fa-home mr-2"></i>BACK TO HOME
+      </a>
+    </div>
+
+    <!-- Tool Selection Screen -->
+    <div id="tool-selection" class="text-center">
+      <div class="mb-12">
+        <h1 class="text-5xl font-bold mb-6 orbitron text-white">🔐 SECURE TEXT VAULT</h1>
+        <p class="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
+          Store your notes securely with password protection and multi-window support. 
+          All data is encrypted and stored locally in your browser.
+        </p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          
+          <!-- Store Text Tool -->
+          <div class="cyber-card p-8 text-center hover:scale-105 transition-transform cursor-pointer" onclick="showStoreTool()">
+            <div class="text-6xl mb-6">💾</div>
+            <h3 class="text-2xl font-bold mb-4 text-white orbitron">STORE TEXT</h3>
+            <p class="text-gray-400 mb-6">
+              Create new secure notes with multi-window support. 
+              Add password protection and organize your content in multiple windows.
+            </p>
+            <div class="cyber-button">
+              <i class="fas fa-plus mr-2"></i>CREATE NOTE
+            </div>
+          </div>
+          
+          <!-- Find Text Tool -->
+          <div class="cyber-card p-8 text-center hover:scale-105 transition-transform cursor-pointer" onclick="showFindTool()">
+            <div class="text-6xl mb-6">🔍</div>
+            <h3 class="text-2xl font-bold mb-4 text-white orbitron">FIND YOUR TEXT</h3>
+            <p class="text-gray-400 mb-6">
+              Retrieve your saved notes using your name and password. 
+              Access your text in the same format you saved it.
+            </p>
+            <div class="cyber-button">
+              <i class="fas fa-search mr-2"></i>FIND NOTE
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+
+    <!-- Store Text Interface -->
+    <div id="store-interface" class="hidden">
+      <div class="mb-8 text-center">
+        <h2 class="text-4xl font-bold mb-4 orbitron text-white">💾 STORE TEXT</h2>
+        <button onclick="backToSelection()" class="cyber-button secondary mb-4">
+          <i class="fas fa-arrow-left mr-2"></i>BACK TO TOOLS
+        </button>
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Left Panel - Note Management -->
+        <div class="lg:col-span-1">
+          <div class="cyber-card p-6">
+            <div class="flex items-center justify-between mb-6">
+              <h3 class="text-xl font-bold text-white orbitron">📝 NEW NOTE</h3>
+            </div>
+            
+            <!-- Note Name Input -->
+            <div class="mb-4">
+              <label class="block text-white mb-2 font-semibold">Note Name:</label>
+              <input 
+                type="text" 
+                id="note-name" 
+                placeholder="Enter note name (e.g., work-ideas, personal)"
+                class="cyber-input w-full"
+              >
+            </div>
+            
+            <!-- Password Input -->
+            <div class="mb-4">
+              <label class="block text-white mb-2 font-semibold">Password:</label>
+              <div class="relative">
+                <input 
+                  type="password" 
+                  id="note-password" 
+                  placeholder="Create a secure password"
+                  class="cyber-input w-full pr-12"
+                >
+                <button 
+                  type="button" 
+                  onclick="togglePasswordVisibility('note-password')"
+                  class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                >
+                  <i class="fas fa-eye" id="note-password-toggle"></i>
+                </button>
+              </div>
+            </div>
+            
+            <!-- Create Button -->
+            <button onclick="createNewNote()" class="cyber-button w-full">
+              <i class="fas fa-plus mr-2"></i>CREATE NOTE
+            </button>
+            
+            <!-- Saved Notes List -->
+            <div class="mt-8">
+              <h4 class="text-lg font-bold text-white mb-4">📂 YOUR NOTES</h4>
+              <div id="notes-list" class="space-y-2 max-h-60 overflow-y-auto">
+                <p class="text-gray-400 text-sm">No notes created yet</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Center Panel - Text Editor -->
+        <div class="lg:col-span-2">
+          <div class="cyber-card p-6">
+            <div class="flex items-center justify-between mb-6">
+              <h3 class="text-xl font-bold text-white orbitron">✍️ TEXT EDITOR</h3>
+              <div class="flex space-x-2">
+                <button onclick="addNewWindow()" class="cyber-button secondary">
+                  <i class="fas fa-window-restore mr-2"></i>NEW WINDOW
+                </button>
+                <button onclick="saveCurrentNote()" class="cyber-button">
+                  <i class="fas fa-save mr-2"></i>SAVE
+                </button>
+              </div>
+            </div>
+            
+            <!-- Multi-Window Editor -->
+            <div id="editor-windows" class="space-y-4 max-h-96 overflow-y-auto">
+              <div class="editor-window" data-window="1">
+                <div class="flex items-center justify-between mb-2">
+                  <label class="text-white font-semibold window-header">Window 1:</label>
+                  <button onclick="removeWindow(1)" class="text-red-400 hover:text-red-300" style="display: none;">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+                <textarea 
+                  id="editor-1" 
+                  class="cyber-textarea w-full h-40" 
+                  placeholder="Start typing your note here..."
+                ></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+    <!-- Find Text Interface -->
+    <div id="find-interface" class="hidden">
+      <div class="mb-8 text-center">
+        <h2 class="text-4xl font-bold mb-4 orbitron text-white">🔍 FIND YOUR TEXT</h2>
+        <button onclick="backToSelection()" class="cyber-button secondary mb-4">
+          <i class="fas fa-arrow-left mr-2"></i>BACK TO TOOLS
+        </button>
+      </div>
+      
+      <div class="max-w-2xl mx-auto">
+        <div class="cyber-card p-8">
+          <h3 class="text-2xl font-bold text-white mb-6 orbitron text-center">🔓 ACCESS YOUR NOTE</h3>
+          
+          <!-- Search Form -->
+          <div class="space-y-6">
+            <div>
+              <label class="block text-white mb-2 font-semibold">Note Name:</label>
+              <input 
+                type="text" 
+                id="search-note-name" 
+                placeholder="Enter the name of your note"
+                class="cyber-input w-full"
+              >
+            </div>
+            
+            <div>
+              <label class="block text-white mb-2 font-semibold">Password:</label>
+              <div class="relative">
+                <input 
+                  type="password" 
+                  id="search-password" 
+                  placeholder="Enter your password"
+                  class="cyber-input w-full pr-12"
+                >
+                <button 
+                  type="button" 
+                  onclick="togglePasswordVisibility('search-password')"
+                  class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                >
+                  <i class="fas fa-eye" id="search-password-toggle"></i>
+                </button>
+              </div>
+            </div>
+            
+            <button onclick="findNote()" class="cyber-button w-full">
+              <i class="fas fa-search mr-2"></i>FIND MY NOTE
+            </button>
+          </div>
+          
+          <!-- Usage Tips -->
+          <div class="mt-8 p-4 bg-blue-900 bg-opacity-30 rounded-lg">
+            <h4 class="text-white font-semibold mb-2">💡 How to use:</h4>
+            <ul class="text-gray-300 text-sm space-y-1">
+              <li>• Enter the exact note name you used when creating</li>
+              <li>• Enter the correct password for that note</li>
+              <li>• Your note will be displayed with all windows intact</li>
+              <li>• You can edit or delete the note after finding it</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden file input for imports -->
+  <input type="file" id="import-file" accept=".txt,.json" style="display: none;">
+  
+  <!-- Enhanced Store Text Script -->
+  <script src="store-text-enhanced.js"></script>
+
+  <!-- Advertisement Space -->
+  <div class="container mx-auto px-4 py-8">
+    <div class="cyber-card p-6 text-center">
+      <h3 class="text-lg font-bold text-white mb-4 orbitron">💼 SPONSORED</h3>
+      
+      <!-- Google AdSense Ad Block -->
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6126558809611102"
+           crossorigin="anonymous"></script>
+      <!-- Store Text Tool Ad -->
+      <ins class="adsbygoogle"
+           style="display:block; margin: 20px 0;"
+           data-ad-client="ca-pub-6126558809611102"
+           data-ad-slot="9131891151"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+           (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+      
+      <p class="text-gray-400 text-sm mt-4">
+        🌟 Support our free tools by viewing ads • Keep your data private and secure
+      </p>
+    </div>
+  </div>
+
+</body>
+</html>

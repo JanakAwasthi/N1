@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔐 Store Text Cloud - Cross-Device Access | LinkToQR.me NEXUS</title>
+  
+  <!-- Favicon and App Icons -->
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../favicon.ico">
+  
+  <!-- Google AdSense -->
+  <meta name="google-adsense-account" content="ca-pub-6126558809611102">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6126558809611102"
+     crossorigin="anonymous"></script>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Cloud-based secure text storage with cross-device access. Store and access your notes from any device with password protection.">
+  <meta name="keywords" content="cloud text storage, cross-device notes, password protected, secure storage, LinkToQR, NEXUS">
+  <meta name="author" content="LinkToQR.me NEXUS">
+  
+  <!-- Social Media Meta Tags -->
+  <meta property="og:title" content="🔐 Store Text Cloud - Cross-Device Access | LinkToQR.me NEXUS">
+  <meta property="og:description" content="Cloud-based secure text storage with cross-device access">
+  <meta property="og:image" content="../../favicon.ico">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="🔐 Store Text Cloud - Cross-Device Access | LinkToQR.me NEXUS">
+  <meta name="twitter:description" content="Cloud-based secure text storage with cross-device access">
+  <meta name="twitter:image" content="../../favicon.ico">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared-styles.css">
+
+  <style>
+    :root {
+      --primary: #00d4ff;
+      --secondary: #ff0080;
+      --accent: #7c3aed;
+      --success: #00ff88;
+      --warning: #ffaa00;
+      --error: #ff0040;
+      --neon-blue: #00d4ff;
+      --neon-pink: #ff0080;
+      --neon-purple: #8000ff;
+      --dark-bg: #0a0a0a;
+      --dark-surface: #1a1a1a;
+    }
+
+    body {
+      font-family: 'Exo 2', sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #000a1a 100%);
+      color: white;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .cyber-bg {
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #000a1a 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cyber-bg::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 20%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 0, 128, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .neon-border {
+      border: 2px solid var(--neon-blue);
+      box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+    }
+
+    .cyber-input {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+
+    .cyber-input:focus {
+      border-color: var(--neon-blue);
+      box-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+      outline: none;
+    }
+
+    .cyber-btn {
+      background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+      border: none;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cyber-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
+    }
+
+    .cyber-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .cyber-btn:hover::before {
+      left: 100%;
+    }
+
+    .editor-container {
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+    }
+
+    .text-editor {
+      background: rgba(0, 0, 0, 0.7);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      color: white;
+      font-family: 'Courier New', monospace;
+      resize: none;
+    }
+
+    .text-editor:focus {
+      border-color: var(--neon-blue);
+      box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+      outline: none;
+    }
+
+    .status-bar {
+      background: rgba(0, 0, 0, 0.8);
+      border-top: 1px solid rgba(0, 212, 255, 0.2);
+    }
+
+    .site-info {
+      background: linear-gradient(45deg, rgba(0, 212, 255, 0.1), rgba(128, 0, 255, 0.1));
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body class="cyber-bg">
+  <!-- Navigation Header -->
+  <nav class="sticky top-0 z-50 backdrop-blur-md bg-black bg-opacity-50 border-b border-cyan-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="text-2xl font-bold orbitron text-cyan-400 hover:text-cyan-300 transition-colors">
+            <i class="fas fa-arrow-left mr-2"></i>LinkToQR.me
+          </a>
+          <span class="text-gray-400">|</span>
+          <h2 class="text-xl font-semibold text-white">Store Text Cloud</h2>
+        </div>
+        <div class="flex items-center space-x-3">
+          <a href="../../index.html" class="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors text-sm">
+            <i class="fas fa-home mr-2"></i>Home
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="min-h-screen py-8">
+    <div class="max-w-6xl mx-auto px-4">
+      <!-- Header -->
+      <div class="text-center mb-8">
+        <h1 class="text-4xl font-bold orbitron mb-4">
+          <i class="fas fa-cloud mr-3 text-cyan-400"></i>Store Text Cloud
+        </h1>
+        <p class="text-xl text-gray-300">Secure cross-device text storage - Access your notes from anywhere</p>
+        <div class="mt-4 text-sm text-gray-400">
+          <i class="fas fa-shield-alt mr-2"></i>End-to-end encrypted • 
+          <i class="fas fa-sync-alt mr-2 ml-2"></i>Real-time sync • 
+          <i class="fas fa-mobile-alt mr-2 ml-2"></i>Cross-device access
+        </div>
+      </div>
+
+      <!-- Loading Indicator -->
+      <div id="loading" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-gray-900 p-8 rounded-lg border border-cyan-500 text-center">
+          <i class="fas fa-spinner fa-spin text-3xl text-cyan-400 mb-4"></i>
+          <p class="text-white">Processing...</p>
+        </div>
+      </div>
+
+      <!-- Authentication Section -->
+      <div id="auth-section" class="max-w-md mx-auto">
+        <div class="bg-gray-900 bg-opacity-80 p-8 rounded-xl border border-cyan-500 shadow-2xl">
+          <h2 class="text-2xl font-bold mb-6 text-center orbitron">Access Your Site</h2>
+          
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium mb-2">Site Name</label>
+              <input 
+                type="text" 
+                id="site-name" 
+                class="w-full px-4 py-3 rounded-lg cyber-input text-white"
+                placeholder="Enter your unique site name"
+                autocomplete="username"
+              >
+              <p class="text-xs text-gray-400 mt-1">Choose a unique name to access from any device</p>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium mb-2">Password</label>
+              <input 
+                type="password" 
+                id="password" 
+                class="w-full px-4 py-3 rounded-lg cyber-input text-white"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+              >
+              <p class="text-xs text-gray-400 mt-1">Minimum 6 characters for security</p>
+            </div>
+          </div>
+          
+          <div class="mt-6 space-y-3">
+            <button id="open-site" class="w-full py-3 rounded-lg cyber-btn text-white font-semibold">
+              <i class="fas fa-unlock mr-2"></i>Open Existing Site
+            </button>
+            <button id="create-site" class="w-full py-3 rounded-lg bg-purple-600 text-white font-semibold hover:bg-purple-700 transition-colors">
+              <i class="fas fa-plus mr-2"></i>Create New Site
+            </button>
+          </div>
+          
+          <div class="mt-6 text-center">
+            <p class="text-xs text-gray-400">
+              Your data is encrypted and can only be accessed with your site name and password
+            </p>
+          </div>
+        </div>
+
+        <!-- How it works -->
+        <div class="mt-8 bg-gray-900 bg-opacity-60 p-6 rounded-xl border border-purple-500">
+          <h3 class="text-lg font-bold mb-4 text-center">How It Works</h3>
+          <div class="space-y-3 text-sm text-gray-300">
+            <div class="flex items-start">
+              <i class="fas fa-key text-cyan-400 mr-3 mt-1"></i>
+              <div>
+                <strong>Choose a Site Name:</strong> Pick a unique name that you'll remember
+              </div>
+            </div>
+            <div class="flex items-start">
+              <i class="fas fa-lock text-purple-400 mr-3 mt-1"></i>
+              <div>
+                <strong>Set a Password:</strong> Your password encrypts all your data
+              </div>
+            </div>
+            <div class="flex items-start">
+              <i class="fas fa-globe text-green-400 mr-3 mt-1"></i>
+              <div>
+                <strong>Access Anywhere:</strong> Use the same site name and password on any device
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Editor Section -->
+      <div id="editor-section" class="hidden">
+        <!-- Site Info Bar -->
+        <div class="site-info p-4 mb-6">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+              <div class="flex items-center">
+                <i class="fas fa-globe text-cyan-400 mr-2"></i>
+                <span class="font-medium">Site:</span>
+                <code id="current-site-name" class="ml-2 px-2 py-1 bg-black bg-opacity-50 rounded text-cyan-400"></code>
+              </div>
+              <div class="flex items-center">
+                <i class="fas fa-shield-alt text-green-400 mr-2"></i>
+                <span class="text-sm">Encrypted & Synced</span>
+              </div>
+            </div>
+            <div class="flex items-center space-x-4">
+              <span id="saving-indicator" class="text-sm"></span>
+              <button id="export-btn" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-sm">
+                <i class="fas fa-download mr-1"></i>Export
+              </button>
+              <button id="import-btn" class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition-colors text-sm">
+                <i class="fas fa-upload mr-1"></i>Import
+              </button>
+              <input type="file" id="import-file" accept=".txt" class="hidden">
+            </div>
+          </div>
+        </div>
+
+        <!-- Text Editor -->
+        <div class="editor-container rounded-xl overflow-hidden">
+          <div class="p-4 border-b border-gray-700">
+            <div class="flex items-center justify-between">
+              <h3 class="text-lg font-semibold">Your Note</h3>
+              <div class="text-sm text-gray-400">
+                <i class="fas fa-save mr-1"></i>Auto-saves every 2 seconds
+              </div>
+            </div>
+          </div>
+          
+          <textarea 
+            id="text-editor" 
+            class="w-full h-96 p-6 text-editor resize-none"
+            placeholder="Start typing your note here... 
+
+This text will be automatically saved and synced across all your devices. 
+Use Ctrl+S to save manually or just keep typing - we'll handle the rest!
+
+Features:
+• Real-time auto-save
+• Cross-device synchronization  
+• End-to-end encryption
+• Export/import functionality
+• Unlimited text length"
+          ></textarea>
+          
+          <div class="status-bar p-3 flex items-center justify-between">
+            <div class="flex items-center space-x-4 text-sm text-gray-400">
+              <span id="word-count">0 words, 0 characters</span>
+              <span>|</span>
+              <span><i class="fas fa-keyboard mr-1"></i>Press Ctrl+S to save</span>
+            </div>
+            <div class="flex items-center space-x-2 text-sm text-gray-400">
+              <i class="fas fa-wifi text-green-400"></i>
+              <span>Connected</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tips -->
+        <div class="mt-6 bg-gray-900 bg-opacity-60 p-4 rounded-xl border border-blue-500">
+          <h4 class="font-semibold mb-2 text-blue-400">
+            <i class="fas fa-lightbulb mr-2"></i>Tips
+          </h4>
+          <ul class="text-sm text-gray-300 space-y-1">
+            <li>• Your note is automatically saved as you type</li>
+            <li>• Access this same note from any device using your site name and password</li>
+            <li>• Use the export feature to download a backup of your text</li>
+            <li>• Your data is encrypted and only you can access it</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- AdSense Banner Ad -->
+      <div class="mt-12 text-center">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-6126558809611102"
+             data-ad-slot="1234567890"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+      </div>
+    </div>
+  </div>
+
+  <!-- AdSense Sidebar Ad -->
+  <div class="fixed right-4 top-1/2 transform -translate-y-1/2 hidden lg:block">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-6126558809611102"
+         data-ad-slot="0987654321"
+         data-ad-format="vertical"></ins>
+  </div>
+
+  <!-- AdSense Scripts -->
+  <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+
+  <script src="store-text-cloud.js"></script>
+</body>
+</html>

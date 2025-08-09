@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Document Scanner - CamScanner Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    
+    <!-- Google AdSense (valid) -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6126558809611102"
+       crossorigin="anonymous"></script>
+    <meta name="google-adsense-account" content="ca-pub-6126558809611102">
+    
+    <style>
+        .scanner-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .dragover {
+            background: rgba(59, 130, 246, 0.1);
+            border: 2px dashed #3b82f6;
+        }
+        .page-thumb {
+            transition: all 0.3s ease;
+        }
+        .page-thumb:hover {
+            transform: translateY(-2px);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .detection-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Navigation Header -->
+    <nav class="bg-white shadow-lg sticky top-0 z-40">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-3">
+                <div class="flex items-center space-x-3">
+                    <a href="../../index.html" class="text-blue-600 hover:text-blue-800">
+                        <i class="fas fa-arrow-left text-xl"></i>
+                    </a>
+                    <h1 class="text-xl font-bold text-gray-800">Document Scanner Pro</h1>
+                    <span class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-2 py-1 rounded-full text-xs">CamScanner</span>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <div id="batch-stats" class="text-sm text-gray-600"></div>
+                    <button id="help-btn" class="text-gray-600 hover:text-gray-800">
+                        <i class="fas fa-question-circle text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Main Scanning Area -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <!-- Camera Container -->
+                    <div id="camera-container" class="relative bg-black aspect-video rounded-t-xl">
+                        <video id="camera-video" class="w-full h-full object-cover" autoplay muted></video>
+                        <div id="detection-overlay" class="detection-overlay"></div>
+                        
+                        <!-- Camera Start/Stop -->
+                        <div class="absolute inset-0 flex items-center justify-center" id="camera-placeholder">
+                            <div class="text-center text-white">
+                                <i class="fas fa-camera text-6xl mb-4 opacity-50"></i>
+                                <p class="text-lg mb-4">Start scanning documents</p>
+                                <button id="start-scan" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg">
+                                    <i class="fas fa-camera mr-2"></i>Start Camera
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Upload Drop Zone Overlay -->
+                        <div class="absolute inset-4 border-2 border-dashed border-white/30 rounded-lg flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity pointer-events-none">
+                            <div class="text-center text-white">
+                                <i class="fas fa-cloud-upload-alt text-4xl mb-2"></i>
+                                <p>Drop images here or click to upload</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Camera Controls -->
+                    <div id="camera-controls" class="hidden bg-gray-900 p-4">
+                        <div class="flex justify-between items-center">
+                            <div class="flex space-x-3">
+                                <button id="capture-page" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg">
+                                    <i class="fas fa-camera mr-2"></i>Capture
+                                </button>
+                                <button id="switch-camera" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                                <button id="toggle-flash" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg">
+                                    <i class="fas fa-bolt"></i>
+                                </button>
+                            </div>
+                            <button id="stop-scan" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg">
+                                <i class="fas fa-stop mr-2"></i>Stop
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Upload Area -->
+                    <div class="p-6 border-t">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <button id="upload-btn" class="flex items-center justify-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors">
+                                <i class="fas fa-upload mr-3 text-blue-600"></i>
+                                <span>Upload Images</span>
+                            </button>
+                            <input type="file" id="upload-images" multiple accept="image/*" class="hidden">
+                            
+                            <div class="flex space-x-2">
+                                <button id="new-batch" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg">
+                                    <i class="fas fa-plus mr-2"></i>New Batch
+                                </button>
+                                <button id="save-batch" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg">
+                                    <i class="fas fa-save mr-2"></i>Save
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scanning Settings -->
+                <div class="bg-white rounded-xl shadow-lg mt-6 p-6">
+                    <h3 class="text-lg font-semibold mb-4">Scanning Settings</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Scan Mode</label>
+                            <select id="scan-mode" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                                <option value="manual">Manual Capture</option>
+                                <option value="auto">Auto Capture</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Enhancement</label>
+                            <select id="enhancement-mode" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                                <option value="original">Original</option>
+                                <option value="enhanced" selected>Enhanced</option>
+                                <option value="grayscale">Grayscale</option>
+                                <option value="bw">Black & White</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Page Size</label>
+                            <select id="page-size" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                                <option value="auto" selected>Auto Detect</option>
+                                <option value="a4">A4</option>
+                                <option value="letter">Letter</option>
+                                <option value="legal">Legal</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 flex flex-wrap gap-4">
+                        <label class="flex items-center">
+                            <input type="checkbox" id="auto-crop" checked class="mr-2">
+                            <span class="text-sm">Auto Crop</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" id="auto-enhance" checked class="mr-2">
+                            <span class="text-sm">Auto Enhance</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" id="auto-deskew" checked class="mr-2">
+                            <span class="text-sm">Auto Deskew</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="space-y-6">
+                <!-- Current Batch -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold">Current Batch</h3>
+                        <button id="clear-batch" class="text-red-600 hover:text-red-800">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    
+                    <div id="batch-pages" class="grid grid-cols-2 gap-3 max-h-96 overflow-y-auto">
+                        <!-- Pages will be added here dynamically -->
+                    </div>
+                    
+                    <div class="mt-4 space-y-2">
+                        <button id="edit-page" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg disabled:opacity-50" disabled>
+                            <i class="fas fa-edit mr-2"></i>Edit Selected
+                        </button>
+                        <button id="reorder-pages" class="w-full bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-lg">
+                            <i class="fas fa-sort mr-2"></i>Reorder Pages
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Export Options -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-lg font-semibold mb-4">Export</h3>
+                    
+                    <!-- Google AdSense Display Ad -->
+                    <div class="mb-4">
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-client="ca-pub-6126558809611102"
+                             data-ad-slot="9131891151"
+                             data-ad-format="auto"
+                             data-full-width-responsive="true"></ins>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <button id="export-pdf" class="w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg">
+                            <i class="fas fa-file-pdf mr-2"></i>Export as PDF
+                        </button>
+                        <button id="export-images" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg">
+                            <i class="fas fa-images mr-2"></i>Export as Images
+                        </button>
+                        <button id="export-word" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg">
+                            <i class="fas fa-file-word mr-2"></i>Export to Word
+                        </button>
+                        <button id="share-batch" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg">
+                            <i class="fas fa-share mr-2"></i>Share Batch
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Saved Batches -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-lg font-semibold mb-4">Saved Batches</h3>
+                    <div id="saved-batches" class="space-y-3 max-h-64 overflow-y-auto">
+                        <!-- Saved batches will be listed here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Preview Modal -->
+    <div id="page-preview-modal" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-xl max-w-4xl w-full max-h-screen overflow-hidden">
+                <div class="flex justify-between items-center p-4 border-b">
+                    <h3 class="text-lg font-semibold">Page Preview</h3>
+                    <button id="close-preview" class="text-gray-600 hover:text-gray-800">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div id="page-preview" class="p-4 text-center overflow-auto max-h-96">
+                    <!-- Preview content will be inserted here -->
+                </div>
+                <div class="p-4 border-t flex justify-end space-x-3">
+                    <button id="delete-page" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg">
+                        <i class="fas fa-trash mr-2"></i>Delete
+                    </button>
+                    <button id="edit-page-modal" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                        <i class="fas fa-edit mr-2"></i>Edit
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Editor Modal -->
+    <div id="page-editor" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-xl max-w-6xl w-full max-h-screen overflow-hidden">
+                <div class="flex justify-between items-center p-4 border-b">
+                    <h3 class="text-lg font-semibold">Edit Page</h3>
+                    <button id="close-editor" class="text-gray-600 hover:text-gray-800">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <div class="flex">
+                    <!-- Editor Tools -->
+                    <div class="w-64 p-4 border-r bg-gray-50">
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-medium mb-2">Transform</h4>
+                                <div class="flex space-x-2">
+                                    <button id="rotate-left" class="flex-1 bg-gray-600 text-white py-2 px-3 rounded text-sm">
+                                        <i class="fas fa-undo"></i>
+                                    </button>
+                                    <button id="rotate-right" class="flex-1 bg-gray-600 text-white py-2 px-3 rounded text-sm">
+                                        <i class="fas fa-redo"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-medium mb-2">Adjustments</h4>
+                                <div class="space-y-3">
+                                    <div>
+                                        <label class="block text-sm text-gray-600 mb-1">Brightness</label>
+                                        <input type="range" id="brightness" min="-100" max="100" value="0" class="w-full">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm text-gray-600 mb-1">Contrast</label>
+                                        <input type="range" id="contrast" min="-100" max="100" value="0" class="w-full">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-medium mb-2">Tools</h4>
+                                <button id="crop-tool" class="w-full bg-blue-600 text-white py-2 px-3 rounded text-sm mb-2">
+                                    <i class="fas fa-crop mr-2"></i>Crop
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Editor Canvas -->
+                    <div class="flex-1 p-4">
+                        <div class="text-center">
+                            <canvas id="editor-canvas" class="border rounded max-w-full max-h-96"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="p-4 border-t flex justify-end space-x-3">
+                    <button id="cancel-edit" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg">
+                        Cancel
+                    </button>
+                    <button id="apply-edit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                        <i class="fas fa-check mr-2"></i>Apply Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Modal -->
+    <div id="loading" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="bg-white rounded-xl p-6 text-center">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                <p class="text-gray-700">Processing...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Canvases for Processing -->
+    <canvas id="scan-canvas" class="hidden"></canvas>
+    <canvas id="preview-canvas" class="hidden"></canvas>
+
+    <!-- Help Modal -->
+    <div id="help-modal" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-xl max-w-2xl w-full max-h-screen overflow-auto">
+                <div class="flex justify-between items-center p-6 border-b">
+                    <h3 class="text-xl font-semibold">How to Use Document Scanner Pro</h3>
+                    <button id="close-help" class="text-gray-600 hover:text-gray-800">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div class="p-6">
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="font-semibold text-lg mb-2">Getting Started</h4>
+                            <ul class="list-disc list-inside space-y-1 text-gray-700">
+                                <li>Click "Start Camera" to begin scanning documents</li>
+                                <li>Or upload images directly using the upload button</li>
+                                <li>Drag and drop multiple images onto the camera area</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-semibold text-lg mb-2">Scanning Features</h4>
+                            <ul class="list-disc list-inside space-y-1 text-gray-700">
+                                <li><strong>Auto Mode:</strong> Automatically detects and captures documents</li>
+                                <li><strong>Manual Mode:</strong> Click capture button when ready</li>
+                                <li><strong>Auto Enhancement:</strong> Improves document readability</li>
+                                <li><strong>Auto Crop:</strong> Detects document edges and crops automatically</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-semibold text-lg mb-2">Batch Management</h4>
+                            <ul class="list-disc list-inside space-y-1 text-gray-700">
+                                <li>Scan multiple pages into a single batch</li>
+                                <li>Reorder pages by dragging in the sidebar</li>
+                                <li>Save batches for later editing</li>
+                                <li>Edit individual pages with crop, rotate, and adjustment tools</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-semibold text-lg mb-2">Export Options</h4>
+                            <ul class="list-disc list-inside space-y-1 text-gray-700">
+                                <li><strong>PDF:</strong> Create searchable PDF documents</li>
+                                <li><strong>Images:</strong> Export as high-quality JPEG files</li>
+                                <li><strong>Word:</strong> Generate editable Word documents (OCR)</li>
+                                <li><strong>Share:</strong> Generate shareable links for your batches</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ensure AdSense auto-ads and universal SEO/brand/JSON-LD get injected -->
+    <script src="../universal-enhancements.js"></script>
+    
+    <!-- Pro scanner script -->
+    <script src="document-scanner-pro.js"></script>
+    <script>
+      // Ensure auto-ads unit renders if present
+      try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+    </script>
+</body>
+</html>

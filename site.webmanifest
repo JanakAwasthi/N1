@@ -1,0 +1,17 @@
+{
+    "name": "LinkToQR.me NEXUS",
+    "short_name": "LinkToQR",
+    "description": "Advanced web toolkit with QR generators, image tools, and document processors",
+    "icons": [
+        {
+            "src": "/favicon.ico",
+            "sizes": "512x512 192x192 144x144 32x32 16x16",
+            "type": "image/x-icon"
+        }
+    ],
+    "theme_color": "#2d89ef",
+    "background_color": "#ffffff",
+    "display": "standalone",
+    "start_url": "/",
+    "scope": "/"
+}

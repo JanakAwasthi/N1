@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Allow: /tools/
+Allow: /ads.txt
+Sitemap: https://linktoqr.me/sitemap.xml
+
+# Google AdSense Bot
+User-agent: Mediapartners-Google
+Allow: /
+
+# Allow all bots to crawl ads.txt
+User-agent: *
+Allow: /ads.txt

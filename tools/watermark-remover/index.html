@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Watermark Remover - LinkToQR.me Toolkit</title>  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared-styles.css">
+  <style>
+    body { 
+      font-family: 'Poppins', sans-serif; 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+      min-height: 100vh; 
+    }
+    .tool-container { 
+      background: white; 
+      border-radius: 20px; 
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
+    }
+    .dropzone { 
+      border: 3px dashed #e5e7eb; 
+      border-radius: 15px; 
+      transition: all 0.3s ease; 
+      background: #f9fafb; 
+    }
+    .dropzone.active { 
+      border-color: #3b82f6; 
+      background: #dbeafe; 
+    }
+    .image-container { 
+      background: #f8fafc; 
+      border-radius: 12px; 
+      border: 2px solid #e5e7eb; 
+      position: relative; 
+      overflow: hidden; 
+    }
+    .removal-area { 
+      border: 2px dashed #ef4444; 
+      background: rgba(239, 68, 68, 0.1); 
+      position: absolute; 
+      cursor: move; 
+    }
+    .removal-handle { 
+      width: 8px; 
+      height: 8px; 
+      background: #ef4444; 
+      border: 2px solid white; 
+      border-radius: 50%; 
+      position: absolute; 
+      cursor: pointer; 
+    }
+    .control-panel { 
+      background: #f0f9ff; 
+      border-radius: 12px; 
+      border: 1px solid #0ea5e9; 
+    }
+    .method-card { 
+      background: white; 
+      border-radius: 8px; 
+      border: 2px solid #e5e7eb; 
+      transition: all 0.3s ease; 
+      cursor: pointer; 
+    }
+    .method-card.active { 
+      border-color: #3b82f6; 
+      background: #dbeafe; 
+    }
+    .progress-ring { 
+      transform: rotate(-90deg); 
+    }
+    .progress-ring-circle { 
+      stroke-dasharray: 283; 
+      stroke-dashoffset: 283; 
+      transition: stroke-dashoffset 0.35s; 
+    }
+    .comparison-slider { 
+      position: relative; 
+      overflow: hidden; 
+      border-radius: 12px; 
+    }
+    .before-after { 
+      position: relative; 
+      width: 100%; 
+      height: 400px; 
+      overflow: hidden; 
+      border-radius: 12px; 
+    }
+    .before-image, .after-image { 
+      position: absolute; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%; 
+      object-fit: contain; 
+    }
+    .after-image { 
+      clip-path: polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%); 
+    }
+    .slider-handle { 
+      position: absolute; 
+      top: 0; 
+      left: 50%; 
+      width: 4px; 
+      height: 100%; 
+      background: #3b82f6; 
+      cursor: ew-resize; 
+      z-index: 10; 
+    }
+    .slider-button { 
+      position: absolute; 
+      top: 50%; 
+      left: 50%; 
+      width: 20px; 
+      height: 20px; 
+      background: #3b82f6; 
+      border-radius: 50%; 
+      transform: translate(-50%, -50%); 
+      border: 3px solid white; 
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2); 
+    }
+  </style>
+</head>
+<body class="p-4">
+  <!-- Navigation Header -->
+  <nav class="mb-6">
+    <div class="max-w-6xl mx-auto">
+      <div class="bg-white bg-opacity-90 backdrop-blur-sm rounded-xl p-4 shadow-lg">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4">
+            <a href="../../index.html" class="text-2xl font-bold text-purple-600 hover:text-purple-700 transition-colors">
+              <i class="fas fa-arrow-left mr-2"></i>LinkToQR.me
+            </a>
+            <span class="text-gray-400">|</span>
+            <h2 class="text-xl font-semibold text-gray-800">Watermark Remover</h2>
+          </div>
+          <div class="flex items-center space-x-3">
+            <a href="../../index.html" class="px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors text-sm">
+              <i class="fas fa-home mr-2"></i>Home
+            </a>
+            <a href="../image-enhancer/index.html" class="px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors text-sm">
+              <i class="fas fa-magic mr-2"></i>Image Tools
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold text-white mb-2">
+        <i class="fas fa-eraser mr-3"></i>Watermark Remover
+      </h1>
+      <p class="text-white opacity-90">Remove watermarks from images using advanced AI-powered techniques</p>
+    </div>    <div class="tool-container p-8">
+      <div class="tool-layout">
+        
+        <!-- Input Section -->
+        <div class="input-section space-y-6">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-4">Settings & Upload</h2>
+          
+          <!-- Upload Section -->
+          <div class="input-group p-6">
+            <h3 class="text-lg font-medium text-gray-700 mb-4">
+              <i class="fas fa-cloud-upload-alt mr-2 text-blue-600"></i>Upload Image
+            </h3>
+            
+            <div class="dropzone p-8 text-center" id="dropzone">
+              <i class="fas fa-images text-5xl text-gray-400 mb-4"></i>
+              <p class="text-xl font-medium text-gray-600 mb-2">Drag & Drop Image Here</p>
+              <p class="text-sm text-gray-500 mb-4">Supports JPG, PNG, WebP formats • Max 10MB</p>
+              <input type="file" id="image-input" accept="image/*" class="hidden">
+              <button onclick="document.getElementById('image-input').click()" 
+                      class="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-medium">
+                <i class="fas fa-folder-open mr-2"></i>Choose Image
+              </button>
+            </div>
+          </div>          
+          <!-- Method Selection -->
+          <div id="method-selection" class="input-group p-6 hidden">
+            <h3 class="text-lg font-medium text-gray-700 mb-4">
+              <i class="fas fa-magic mr-2 text-blue-600"></i>Removal Method
+            </h3>
+            
+            <div class="grid grid-cols-1 gap-3">
+              <div class="method-card p-4 active" data-method="auto">
+                <div class="text-center">
+                  <i class="fas fa-robot text-2xl text-blue-600 mb-2"></i>
+                  <h4 class="font-semibold text-gray-800 mb-1">Auto Detection</h4>
+                  <p class="text-xs text-gray-600">AI automatically detects and removes watermarks</p>
+                </div>
+              </div>
+              
+              <div class="method-card p-4" data-method="manual">
+                <div class="text-center">
+                  <i class="fas fa-mouse-pointer text-2xl text-green-600 mb-2"></i>
+                  <h4 class="font-semibold text-gray-800 mb-1">Manual Selection</h4>
+                  <p class="text-xs text-gray-600">Manually select watermark areas to remove</p>
+                </div>
+              </div>
+              
+              <div class="method-card p-4" data-method="inpaint">
+                <div class="text-center">
+                  <i class="fas fa-paint-brush text-2xl text-purple-600 mb-2"></i>
+                  <h4 class="font-semibold text-gray-800 mb-1">Smart Inpainting</h4>
+                  <p class="text-xs text-gray-600">Advanced content-aware fill technology</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Settings Panel -->
+          <div id="settings-panel" class="input-group p-6 hidden">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">
+              <i class="fas fa-sliders-h mr-2"></i>Settings
+            </h3>
+            
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Detection Sensitivity</label>
+                <input type="range" id="sensitivity" min="1" max="10" value="7" class="w-full">
+                <div class="flex justify-between text-xs text-gray-500">
+                  <span>Low</span>
+                  <span id="sensitivity-value">7</span>
+                  <span>High</span>
+                </div>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Inpainting Method</label>
+                <select id="inpaint-method" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                  <option value="telea">Fast Marching (Telea)</option>
+                  <option value="ns">Navier-Stokes</option>
+                  <option value="edge">Edge-based</option>
+                </select>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Patch Size</label>
+                <input type="range" id="patch-size" min="3" max="15" value="9" class="w-full">
+                <div class="flex justify-between text-xs text-gray-500">
+                  <span>3px</span>
+                  <span id="patch-size-value">9px</span>
+                  <span>15px</span>
+                </div>
+              </div>
+              
+              <div class="flex items-center space-x-3">
+                <input type="checkbox" id="preserve-quality" checked class="w-4 h-4 text-blue-600">
+                <label class="text-sm font-medium text-gray-700">Preserve original quality</label>
+              </div>
+              
+              <div class="flex items-center space-x-3">
+                <input type="checkbox" id="smooth-edges" checked class="w-4 h-4 text-blue-600">
+                <label class="text-sm font-medium text-gray-700">Smooth edges</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Output Section -->
+        <div class="output-section space-y-6">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-4">Image Editor & Results</h2>          
+          <!-- Image Editor -->
+          <div id="image-editor" class="output-group p-6 hidden">
+            <h3 class="text-lg font-medium text-gray-700 mb-4">Image Editor</h3>
+            <div class="image-container p-4">
+              <img id="preview-image" class="w-full h-auto max-h-96 object-contain mx-auto" />
+              <canvas id="editor-canvas" class="hidden w-full h-auto max-h-96 mx-auto"></canvas>
+              
+              <!-- Manual selection overlay -->
+              <div id="selection-overlay" class="hidden">
+                <!-- Selection areas will be added here -->
+              </div>
+            </div>
+            
+            <div class="flex justify-center mt-4 space-x-3">
+              <button id="reset-selections" class="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-all">
+                <i class="fas fa-undo mr-2"></i>Reset
+              </button>
+              <button id="add-selection" class="px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-all">
+                <i class="fas fa-plus mr-2"></i>Add Area
+              </button>
+              <button id="start-removal" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-medium">
+                <i class="fas fa-magic mr-2"></i>Remove Watermark
+              </button>
+            </div>
+          </div>
+
+          <!-- Image Info -->
+          <div id="image-info" class="output-group p-6 hidden">
+            <h3 class="text-lg font-medium text-gray-700 mb-4">Image Information</h3>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between">
+                <span class="text-gray-600">Dimensions:</span>
+                <span id="image-dimensions">-</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600">File Size:</span>
+                <span id="image-size">-</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600">Format:</span>
+                <span id="image-format">-</span>
+              </div>
+            </div>
+          </div>
+                  <span id="image-format">-</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Selections:</span>
+                  <span id="selection-count">0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress Section -->
+      <div id="progress-section" class="hidden mb-8">
+        <div class="bg-blue-50 p-6 rounded-xl border border-blue-200">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-blue-800">
+              <i class="fas fa-cogs mr-2"></i>Processing Image
+            </h3>
+            <div class="relative w-12 h-12">
+              <svg class="progress-ring w-12 h-12">
+                <circle class="progress-ring-circle" stroke="#3b82f6" stroke-width="2" fill="transparent" r="18" cx="24" cy="24"/>
+              </svg>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <span id="progress-percent" class="text-xs font-medium text-blue-600">0%</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="space-y-2">
+            <div class="flex justify-between text-sm">
+              <span id="progress-status">Initializing...</span>
+              <span id="progress-time">00:00</span>
+            </div>
+            <div class="w-full bg-blue-200 rounded-full h-2">
+              <div id="progress-bar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%">          
+          <!-- Additional Results moved to output section -->
+          <div id="additional-results" class="output-group p-6 hidden">
+            <h3 class="text-lg font-medium text-gray-700 mb-4">Before/After Comparison</h3>
+            <div class="mb-6">
+              <div class="before-after" id="comparison-container">
+                <img id="before-image" class="before-image" />
+                <img id="after-image" class="after-image" />
+                <div class="slider-handle" id="slider-handle">
+                  <div class="slider-button"></div>
+                </div>
+              </div>
+              <div class="text-center mt-3">
+                <p class="text-sm text-gray-600">Drag the slider to compare before and after</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+            <p class="text-xl font-semibold text-blue-700" id="processing-time">-</p>
+          </div>
+          <div class="bg-purple-50 p-4 rounded-lg text-center">
+            <i class="fas fa-compress-alt text-2xl text-purple-600 mb-2"></i>
+            <p class="text-sm text-gray-600">Size Change</p>
+            <p class="text-xl font-semibold text-purple-700" id="size-change">-</p>
+          </div>
+          <div class="bg-orange-50 p-4 rounded-lg text-center">
+            <i class="fas fa-star text-2xl text-orange-600 mb-2"></i>
+            <p class="text-sm text-gray-600">Quality Score</p>
+            <p class="text-xl font-semibold text-orange-700" id="quality-score">-</p>
+          </div>
+        </div>
+
+        <!-- Download Options -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <button id="download-result" class="py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all font-medium">
+            <i class="fas fa-download mr-2"></i>Download Result
+          </button>
+          <button id="download-comparison" class="py-3 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-all font-medium">
+            <i class="fas fa-images mr-2"></i>Download Comparison
+          </button>
+          <button id="process-another" class="py-3 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-all font-medium">
+            <i class="fas fa-plus mr-2"></i>Process Another
+          </button>
+        </div>
+      </div>
+
+      <!-- Info Section -->
+      <div class="mt-8 bg-orange-50 border border-orange-200 p-6 rounded-xl">
+        <h3 class="text-lg font-semibold text-orange-800 mb-4">
+          <i class="fas fa-info-circle mr-2"></i>How It Works
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-orange-700">
+          <div class="flex items-start space-x-3">
+            <i class="fas fa-upload text-orange-500 mt-1"></i>
+            <div>
+              <p class="font-medium">1. Upload Image</p>
+              <p>Select an image with watermarks to remove</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <i class="fas fa-crosshairs text-orange-500 mt-1"></i>
+            <div>
+              <p class="font-medium">2. Select Method</p>
+              <p>Choose auto-detection or manual selection</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <i class="fas fa-magic text-orange-500 mt-1"></i>
+            <div>
+              <p class="font-medium">3. Remove & Download</p>
+              <p>AI processes and removes watermarks</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-4 p-4 bg-orange-100 rounded-lg">
+          <p class="text-sm text-orange-800">
+            <i class="fas fa-exclamation-triangle mr-2"></i>
+            <strong>Note:</strong> This tool is for educational purposes only. Please respect copyright laws and only remove watermarks from images you own or have permission to modify.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+  <script src="../shared-utils.js"></script>
+  <script src="../universal-enhancements.js"></script>
+  <script src="watermark-remover.js"></script>
+</body>
+</html>

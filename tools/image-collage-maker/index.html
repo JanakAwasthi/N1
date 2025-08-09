@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Collage Maker - LinkToQR.me NEXUS</title>
+  
+  <!-- Favicon and Google AdSense -->
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <meta name="google-adsense-account" content="ca-pub-6126558809611102">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6126558809611102"
+     crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
+  <link rel="stylesheet" href="../shared-styles.css">
+  <script src="../shared-utils.js"></script>
+</head>
+<body>
+  <!-- Particles.js Background -->
+  <div id="particles-js"></div>
+
+  <!-- Futuristic Header -->
+  <header class="futuristic-header sticky top-0 z-50 w-full py-4">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+      <!-- Logo -->
+      <a href="../../index.html" class="flex items-center">
+        <span class="text-3xl font-bold logo-text orbitron">⚡ LinkToQR.me</span>
+        <span class="text-lg font-semibold text-gray-400 ml-2">NEXUS</span>
+      </a>
+
+      <!-- Tool Name -->
+      <div class="hidden md:block">
+        <span class="text-xl font-semibold text-cyan-400 orbitron">COLLAGE MAKER</span>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="flex space-x-4">
+        <a href="../../index.html" class="return-home-btn">
+          <i class="fas fa-home mr-2"></i>HOME
+        </a>
+        <div class="relative group">
+          <button class="return-home-btn flex items-center">
+            <i class="fas fa-images mr-2"></i>IMAGE TOOLS
+            <i class="fas fa-chevron-down ml-1"></i>
+          </button>
+          <div class="absolute right-0 mt-2 w-56 bg-gray-900 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+            <div class="py-2">
+              <a href="../image-compressor/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-compress mr-2"></i>Image Compressor
+              </a>
+              <a href="../image-resizer/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-expand-arrows-alt mr-2"></i>Image Resizer
+              </a>
+              <a href="../image-format-converter/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-exchange-alt mr-2"></i>Format Converter
+              </a>
+              <a href="../image-enhancer/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-magic mr-2"></i>Image Enhancer
+              </a>
+              <a href="../image-cropper/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-crop mr-2"></i>Image Cropper
+              </a>
+              <a href="../image-merger/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-layer-group mr-2"></i>Image Merger
+              </a>
+              <a href="../image-background-remover/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-cut mr-2"></i>Background Remover
+              </a>
+              <a href="../image-resolution-changer/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-tv mr-2"></i>Resolution Changer
+              </a>
+              <a href="../id-photo-maker/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-id-card mr-2"></i>ID Photo Maker
+              </a>
+              <a href="../watermark-remover/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-eraser mr-2"></i>Watermark Remover
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="relative group">
+          <button class="return-home-btn flex items-center">
+            <i class="fas fa-file-alt mr-2"></i>DOC TOOLS
+            <i class="fas fa-chevron-down ml-1"></i>
+          </button>
+          <div class="absolute right-0 mt-2 w-56 bg-gray-900 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+            <div class="py-2">
+              <a href="../document-text-extractor/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-file-export mr-2"></i>Text Extractor
+              </a>
+              <a href="../document-watermark/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-stamp mr-2"></i>Document Watermark
+              </a>
+              <a href="../document-scanner/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-scanner mr-2"></i>Document Scanner
+              </a>
+              <a href="../pdf-converter/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-file-pdf mr-2"></i>PDF Converter
+              </a>
+              <a href="../pdf-merger/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-layer-group mr-2"></i>PDF Merger
+              </a>
+              <a href="../photo-to-pdf/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-images mr-2"></i>Photo to PDF
+              </a>
+              <a href="../digital-signature/index.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-cyan-400">
+                <i class="fas fa-signature mr-2"></i>Digital Signature
+              </a>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 py-16">
+    <!-- Hero Section -->
+    <div class="text-center mb-16">
+      <h1 class="text-6xl font-bold mb-6 orbitron text-gradient">
+        COLLAGE MAKER
+      </h1>
+      <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+        Create beautiful image collages with customizable layouts and effects
+      </p>
+    </div>
+
+    <div class="tool-layout">
+      
+      <!-- Input Section -->
+      <div class="input-section">
+        <h2 class="text-3xl font-semibold text-gradient orbitron mb-6">Images & Settings</h2>
+        
+        <!-- Image Upload Area -->
+        <div class="file-upload-area" id="dropzone">
+          <i class="fas fa-images" style="font-size: 3rem; color: rgba(255,255,255,0.3); margin-bottom: 1rem;"></i>
+          <p class="text-lg font-medium text-gray-300 mb-2">Drag & Drop Multiple Images Here</p>
+          <p class="text-sm text-gray-400 mb-4">or click to browse (select multiple)</p>
+          <input type="file" id="image-input" accept="image/*" multiple class="hidden">
+          <button onclick="document.getElementById('image-input').click()" 
+                  class="cyber-button">
+            <i class="fas fa-file-image mr-2"></i>Choose Images
+          </button>
+        </div>
+
+        <!-- Image Thumbnails -->
+        <div id="image-thumbnails" class="hidden mt-4">
+          <h3 class="text-lg font-medium text-cyan-400 mb-3">Selected Images</h3>
+          <div id="thumbnail-container" class="grid grid-cols-4 gap-2">
+            <!-- Thumbnails will be added here -->
+          </div>
+          <p class="text-sm text-gray-400 mt-2">Click images to remove them</p>
+        </div>
+
+        <!-- Collage Settings -->
+        <div id="collage-controls" class="hidden input-group mt-4">
+          <h3 class="text-lg font-medium text-cyan-400 mb-4">Collage Settings</h3>
+          <div class="space-y-4">
+            <!-- Layout Template -->
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Layout Template</label>
+              <select id="layout-template" class="cyber-input">
+                <option value="grid">Grid Layout</option>
+                <option value="mosaic">Mosaic Layout</option>
+                <option value="magazine">Magazine Style</option>
+                <option value="heart">Heart Shape</option>
+                <option value="circle">Circle Layout</option>
+                <option value="diamond">Diamond Shape</option>
+              </select>
+            </div>
+            
+            <!-- Grid Settings (for grid layout) -->
+            <div id="grid-settings">
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">Columns</label>
+                  <input type="number" id="grid-columns" min="1" max="6" value="3" class="cyber-input">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">Rows</label>
+                  <input type="number" id="grid-rows" min="1" max="6" value="3" class="cyber-input">
+                </div>
+              </div>
+            </div>
+            
+            <!-- Canvas Settings -->
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Canvas Size</label>
+              <select id="canvas-size" class="cyber-input">
+                <option value="1080x1080">Instagram Square (1080x1080)</option>
+                <option value="1200x630">Facebook Cover (1200x630)</option>
+                <option value="1920x1080">HD Wallpaper (1920x1080)</option>
+                <option value="2000x2000">Print Quality (2000x2000)</option>
+                <option value="custom">Custom Size</option>
+              </select>
+            </div>
+            
+            <!-- Custom Size Controls -->
+            <div id="custom-size-controls" class="hidden grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Width (px)</label>
+                <input type="number" id="custom-width" min="100" max="5000" value="1080" class="cyber-input">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Height (px)</label>
+                <input type="number" id="custom-height" min="100" max="5000" value="1080" class="cyber-input">
+              </div>
+            </div>
+            
+            <!-- Spacing and Margins -->
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Spacing (px)</label>
+                <input type="range" id="spacing" min="0" max="50" value="10" class="w-full">
+                <span class="text-xs text-gray-400" id="spacing-value">10px</span>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Border Radius</label>
+                <input type="range" id="border-radius" min="0" max="50" value="5" class="w-full">
+                <span class="text-xs text-gray-400" id="radius-value">5px</span>
+              </div>
+            </div>
+            
+            <!-- Background -->
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Background</label>
+              <div class="flex items-center space-x-2">
+                <input type="color" id="bg-color" value="#ffffff" class="w-12 h-8 rounded border border-cyan-400">
+                <select id="bg-type" class="cyber-input flex-1">
+                  <option value="solid">Solid Color</option>
+                  <option value="gradient">Gradient</option>
+                  <option value="transparent">Transparent</option>
+                </select>
+              </div>
+            </div>
+            
+            <!-- Effects -->
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Effects</label>
+              <div class="space-y-2">
+                <label class="flex items-center text-gray-300">
+                  <input type="checkbox" id="drop-shadow" class="mr-2">
+                  <span class="text-sm">Drop Shadow</span>
+                </label>
+                <label class="flex items-center text-gray-300">
+                  <input type="checkbox" id="vintage-filter" class="mr-2">
+                  <span class="text-sm">Vintage Filter</span>
+                </label>
+                <label class="flex items-center text-gray-300">
+                  <input type="checkbox" id="sepia-tone" class="mr-2">
+                  <span class="text-sm">Sepia Tone</span>
+                </label>
+              </div>
+            </div>
+            
+            <button id="generate-btn" class="cyber-button w-full opacity-50" disabled>
+              <i class="fas fa-magic mr-2"></i>Generate Collage
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Output Section -->
+      <div class="output-section">
+        <h2 class="text-3xl font-semibold text-gradient orbitron mb-6">Preview & Download</h2>
+        
+        <div class="output-preview" id="output-preview-container">
+          <i class="fas fa-image" style="font-size: 3rem; color: rgba(255,255,255,0.3); margin-bottom: 1rem;"></i>
+          <p style="color: rgba(255,255,255,0.5);">Collage will appear here</p>
+          <canvas id="collage-canvas" class="max-w-full h-auto mx-auto rounded hidden"></canvas>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container hidden">
+          <div class="progress-bar"></div>
+        </div>
+
+        <!-- Output Details -->
+        <div class="output-details" id="output-details">
+          <!-- Details will be populated by JavaScript -->
+        </div>
+
+        <!-- Download Section -->
+        <div id="download-section" class="hidden">
+          <div class="space-y-3">
+            <select id="output-format" class="cyber-input">
+              <option value="png">PNG (Best Quality)</option>
+              <option value="jpeg">JPEG (Smaller Size)</option>
+              <option value="webp">WebP (Modern)</option>
+            </select>
+            <button id="download-btn" class="download-btn w-full">
+              <i class="fas fa-download mr-2"></i>Download Collage
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Initialize Particles.js background
+    document.addEventListener('DOMContentLoaded', function() {
+      tsParticles.load("particles-js", {
+        particles: {
+          number: { value: 60, density: { enable: true, value_area: 800 }},
+          color: { value: "#00d4ff" },
+          shape: { type: "circle" },
+          opacity: { value: 0.1, random: false },
+          size: { value: 3, random: true },
+          line_linked: { enable: true, distance: 150, color: "#00d4ff", opacity: 0.2, width: 1 },
+          move: { enable: true, speed: 2, direction: "none", random: false, straight: false, out_mode: "out", bounce: false }
+        },
+        interactivity: {
+          detect_on: "canvas",
+          events: { onhover: { enable: true, mode: "grab" }, onclick: { enable: true, mode: "push" }, resize: true },
+          modes: { grab: { distance: 140, line_linked: { opacity: 1 }}, push: { particles_nb: 4 }}
+        },
+        retina_detect: true
+      });
+    });
+  </script>
+  <script src="../universal-enhancements.js"></script>
+  <script src="image-collage-maker.js"></script>
+</body>
+</html>

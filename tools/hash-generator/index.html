@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6126558809611102" 
+            crossorigin="anonymous"></script>
+    <meta name="google-adsense-account" content="ca-pub-6126558809611102">
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hash Generator - LinkToQR.me NEXUS</title>
+    <meta name="description" content="Generate MD5, SHA-1, SHA-256, SHA-512 and other hash values for text and files. Professional cryptographic hash generator tool.">
+    <meta name="keywords" content="hash generator, MD5, SHA1, SHA256, SHA512, checksum, cryptography, file hash, text hash">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Crypto JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="../shared-styles.css">
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+    
+    <style>
+        .hash-card {
+            transition: all 0.2s ease;
+        }
+        .hash-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        .tab-active {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .drop-zone {
+            border: 2px dashed #cbd5e0;
+            transition: all 0.3s ease;
+        }
+        .drop-zone.dragover {
+            border-color: #667eea;
+            background-color: #f7fafc;
+        }
+        .hash-output {
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
+        <div class="max-w-6xl mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <a href="../../index.html" class="flex items-center space-x-2 text-gray-700 hover:text-blue-600 transition-colors">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Back to Tools</span>
+                    </a>
+                </div>
+                <h1 class="text-2xl font-bold text-gray-800">Hash Generator</h1>
+                <div class="w-24"></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        <!-- AdSense Display Ad -->
+        <div class="flex justify-center mb-8">
+            <!-- Display Ad -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-6126558809611102"
+                 data-ad-slot="1234567890"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+
+        <!-- Tool Description -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="text-center">
+                <i class="fas fa-fingerprint text-4xl text-blue-500 mb-4"></i>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Cryptographic Hash Generator</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    Generate secure hash values using MD5, SHA-1, SHA-256, SHA-512 and other algorithms. Perfect for data integrity verification and security purposes.
+                </p>
+            </div>
+        </div>
+
+        <!-- Mode Tabs -->
+        <div class="bg-white rounded-lg shadow-md mb-8">
+            <div class="flex border-b">
+                <button onclick="switchTab('text')" id="textTab" 
+                        class="tab-active flex-1 py-4 px-6 text-center font-medium transition-colors">
+                    <i class="fas fa-text-height mr-2"></i>Text Hashing
+                </button>
+                <button onclick="switchTab('file')" id="fileTab" 
+                        class="flex-1 py-4 px-6 text-center font-medium text-gray-600 hover:bg-gray-50 transition-colors">
+                    <i class="fas fa-file mr-2"></i>File Hashing
+                </button>
+            </div>
+
+            <!-- Text Mode -->
+            <div id="textMode" class="p-6">
+                <!-- Input Section -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Input Text</label>
+                    <textarea id="textInput" placeholder="Enter text to generate hash..." 
+                              class="w-full h-32 p-4 border border-gray-300 rounded-md resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"></textarea>
+                    <div class="flex justify-between items-center mt-2 text-sm text-gray-500">
+                        <span id="inputLength">0 characters</span>
+                        <button onclick="clearTextInput()" class="text-red-500 hover:text-red-700">
+                            <i class="fas fa-trash mr-1"></i>Clear
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Hash Algorithm Selection -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">Hash Algorithms</label>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                            <input type="checkbox" id="md5" checked class="mr-2">
+                            <span class="text-sm font-medium">MD5</span>
+                        </label>
+                        <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                            <input type="checkbox" id="sha1" checked class="mr-2">
+                            <span class="text-sm font-medium">SHA-1</span>
+                        </label>
+                        <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                            <input type="checkbox" id="sha256" checked class="mr-2">
+                            <span class="text-sm font-medium">SHA-256</span>
+                        </label>
+                        <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                            <input type="checkbox" id="sha512" checked class="mr-2">
+                            <span class="text-sm font-medium">SHA-512</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Generate Button -->
+                <div class="mb-6">
+                    <button onclick="generateTextHashes()" 
+                            class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-6 rounded-md transition-colors">
+                        <i class="fas fa-cog mr-2"></i>Generate Hashes
+                    </button>
+                </div>
+
+                <!-- Hash Results -->
+                <div id="textHashResults" class="space-y-4">
+                    <!-- Results will be populated here -->
+                </div>
+            </div>
+
+            <!-- File Mode -->
+            <div id="fileMode" class="p-6 hidden">
+                <!-- File Upload Area -->
+                <div class="drop-zone rounded-lg p-8 text-center mb-6" id="dropZone">
+                    <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
+                    <p class="text-lg text-gray-600 mb-2">Drag and drop files here</p>
+                    <p class="text-sm text-gray-500 mb-4">or</p>
+                    <input type="file" id="fileInput" multiple class="hidden" accept="*/*">
+                    <button onclick="document.getElementById('fileInput').click()" 
+                            class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-md transition-colors">
+                        <i class="fas fa-folder-open mr-2"></i>Select Files
+                    </button>
+                    <p class="text-xs text-gray-500 mt-4">Maximum file size: 100MB per file</p>
+                </div>
+
+                <!-- File Hash Results -->
+                <div id="fileHashResults" class="space-y-4">
+                    <!-- Results will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Hash Comparison Tool -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h3 class="text-xl font-semibold text-gray-800 mb-6">Hash Comparison Tool</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Hash 1</label>
+                    <input type="text" id="hash1" placeholder="Enter first hash..." 
+                           class="w-full p-3 border border-gray-300 rounded-md font-mono text-sm text-black">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Hash 2</label>
+                    <input type="text" id="hash2" placeholder="Enter second hash..." 
+                           class="w-full p-3 border border-gray-300 rounded-md font-mono text-sm text-black">
+                </div>
+            </div>
+            <div class="mt-4 flex justify-center">
+                <button onclick="compareHashes()" 
+                        class="bg-purple-500 hover:bg-purple-600 text-white px-6 py-2 rounded-md transition-colors">
+                    <i class="fas fa-equals mr-2"></i>Compare Hashes
+                </button>
+            </div>
+            <div id="comparisonResult" class="mt-4 text-center">
+                <!-- Comparison result will appear here -->
+            </div>
+        </div>
+
+        <!-- Hash Information -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Hash Algorithm Information & Use Cases</h3>
+            
+            <!-- Algorithm Details -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="space-y-4">
+                    <div class="border rounded-lg p-4 bg-gray-50">
+                        <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                            <i class="fas fa-shield-alt text-red-500 mr-2"></i>MD5
+                        </h4>
+                        <p class="text-sm text-gray-600 mb-2">128-bit hash (32 hex characters)</p>
+                        <p class="text-xs text-orange-600 mb-2">⚠️ Not recommended for security purposes</p>
+                        <p class="text-xs text-gray-600">Still used for file integrity checks and non-cryptographic purposes</p>
+                    </div>
+                    <div class="border rounded-lg p-4 bg-gray-50">
+                        <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                            <i class="fas fa-shield-alt text-yellow-500 mr-2"></i>SHA-1
+                        </h4>
+                        <p class="text-sm text-gray-600 mb-2">160-bit hash (40 hex characters)</p>
+                        <p class="text-xs text-orange-600 mb-2">⚠️ Deprecated for security applications</p>
+                        <p class="text-xs text-gray-600">Used in legacy systems and Git version control</p>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div class="border rounded-lg p-4 bg-green-50">
+                        <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                            <i class="fas fa-shield-alt text-green-500 mr-2"></i>SHA-256
+                        </h4>
+                        <p class="text-sm text-gray-600 mb-2">256-bit hash (64 hex characters)</p>
+                        <p class="text-xs text-green-600 mb-2">✅ Secure and widely used</p>
+                        <p class="text-xs text-gray-600">Standard for modern cryptographic applications</p>
+                    </div>
+                    <div class="border rounded-lg p-4 bg-green-50">
+                        <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                            <i class="fas fa-shield-alt text-green-700 mr-2"></i>SHA-512
+                        </h4>
+                        <p class="text-sm text-gray-600 mb-2">512-bit hash (128 hex characters)</p>
+                        <p class="text-xs text-green-600 mb-2">✅ Most secure option</p>
+                        <p class="text-xs text-gray-600">Highest security level for sensitive applications</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Use Cases -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="bg-blue-50 rounded-lg p-6">
+                    <h4 class="font-semibold text-blue-800 mb-3 flex items-center">
+                        <i class="fas fa-file-check text-blue-600 mr-2"></i>File Integrity
+                    </h4>
+                    <ul class="text-sm text-blue-700 space-y-2">
+                        <li>• Verify file downloads</li>
+                        <li>• Detect file corruption</li>
+                        <li>• Confirm backup integrity</li>
+                        <li>• Software distribution verification</li>
+                        <li>• Digital forensics</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-purple-50 rounded-lg p-6">
+                    <h4 class="font-semibold text-purple-800 mb-3 flex items-center">
+                        <i class="fas fa-lock text-purple-600 mr-2"></i>Security Applications
+                    </h4>
+                    <ul class="text-sm text-purple-700 space-y-2">
+                        <li>• Password storage (with salt)</li>
+                        <li>• Digital signatures</li>
+                        <li>• Certificate validation</li>
+                        <li>• Blockchain technology</li>
+                        <li>• API authentication tokens</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-green-50 rounded-lg p-6">
+                    <h4 class="font-semibold text-green-800 mb-3 flex items-center">
+                        <i class="fas fa-database text-green-600 mr-2"></i>Data Management
+                    </h4>
+                    <ul class="text-sm text-green-700 space-y-2">
+                        <li>• Database record identification</li>
+                        <li>• Duplicate file detection</li>
+                        <li>• Cache validation</li>
+                        <li>• Version control systems</li>
+                        <li>• Content addressing</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Security Recommendations -->
+            <div class="mt-8 bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+                <h4 class="font-semibold text-yellow-800 mb-3 flex items-center">
+                    <i class="fas fa-exclamation-triangle text-yellow-600 mr-2"></i>Security Best Practices
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-yellow-700">
+                    <div>
+                        <p class="font-medium mb-2">For Security Applications:</p>
+                        <ul class="space-y-1">
+                            <li>• Use SHA-256 or SHA-512</li>
+                            <li>• Always add salt for passwords</li>
+                            <li>• Consider using bcrypt or Argon2</li>
+                            <li>• Avoid MD5 and SHA-1</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p class="font-medium mb-2">For File Verification:</p>
+                        <ul class="space-y-1">
+                            <li>• SHA-256 is recommended</li>
+                            <li>• MD5 acceptable for basic checks</li>
+                            <li>• Compare hashes from trusted sources</li>
+                            <li>• Use multiple algorithms for critical files</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hash History -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-semibold text-gray-800">Hash History</h3>
+                <button onclick="clearHistory()" class="text-red-500 hover:text-red-700 text-sm">
+                    <i class="fas fa-trash mr-1"></i>Clear History
+                </button>
+            </div>
+            <div id="hashHistory" class="space-y-4">
+                <!-- History will be populated here -->
+            </div>
+        </div>
+
+        <!-- AdSense Display Ad -->
+        <div class="flex justify-center mt-8">
+            <!-- Display Ad -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-6126558809611102"
+                 data-ad-slot="1234567890"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <div class="mb-4">
+                <h3 class="text-lg font-semibold mb-2">LinkToQR.me NEXUS</h3>
+                <p class="text-gray-400">Professional Hash Generator Tool</p>
+            </div>
+            <div class="flex justify-center space-x-6 text-sm">
+                <a href="../../index.html" class="hover:text-blue-400 transition-colors">Home</a>
+                <a href="../../privacy-policy.html" class="hover:text-blue-400 transition-colors">Privacy Policy</a>
+                <a href="../../how-to-use.html" class="hover:text-blue-400 transition-colors">How to Use</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../shared-utils.js"></script>
+    <script src="hash-generator.js"></script>
+    
+    <!-- Initialize AdSense -->
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</body>
+</html>

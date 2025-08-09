@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Merger - LinkToQR.me Toolkit</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">  <link rel="stylesheet" href="../shared-styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
+</head>
+<body>
+  <!-- Particles.js Background -->
+  <div id="particles-js"></div>  <!-- Futuristic Header -->
+  <header class="futuristic-header sticky top-0 z-50 w-full py-4">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+      <!-- Logo -->
+      <a href="../../index.html" class="flex items-center">
+        <span class="text-3xl font-bold logo-text orbitron">⚡ LinkToQR.me</span>
+        <span class="text-lg font-semibold text-gray-400 ml-2">NEXUS</span>
+      </a>
+
+      <!-- Tool Name -->
+      <div class="hidden md:block">
+        <span class="text-xl font-semibold text-cyan-400 orbitron">IMAGE MERGER</span>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="flex space-x-4">
+        <a href="../../index.html" class="return-home-btn">
+          <i class="fas fa-home mr-2"></i>HOME
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 py-16">
+    <!-- Hero Section -->
+    <div class="text-center mb-16">
+      <h1 class="text-6xl font-bold mb-6 orbitron text-gradient">
+        IMAGE MERGER
+      </h1>
+      <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+        Merge front and back images with customizable layouts and spacing options
+      </p>
+    </div>
+      <div class="tool-layout">
+          <!-- Input Section -->
+        <div class="input-section">
+          <h2 class="text-3xl font-semibold text-gradient orbitron mb-6">Images & Settings</h2>
+          
+          <!-- Upload Front Image -->
+          <div class="input-group">
+            <h3 class="text-lg font-medium text-cyan-400 mb-3">Front Image</h3>
+            <div class="file-upload-area" id="front-dropzone">
+              <i class="fas fa-image" style="font-size: 3rem; color: rgba(255,255,255,0.3); margin-bottom: 1rem;"></i>
+              <p class="text-lg font-medium text-gray-300 mb-2">Drag & Drop Front Image Here</p>
+              <p class="text-sm text-gray-400 mb-4">or click to browse</p>
+              <input type="file" id="front-input" accept="image/*" class="hidden">
+              <button onclick="document.getElementById('front-input').click()" class="cyber-button">
+                <i class="fas fa-upload mr-2"></i>Choose Front Image
+              </button>
+            </div>
+            <div id="front-preview-container" class="hidden mt-4">
+              <img id="front-preview" class="max-w-full h-auto mx-auto rounded border-2 border-cyan-400" />
+            </div>
+          </div>
+          
+          <!-- Upload Back Image -->
+          <div class="input-group">
+            <h3 class="text-lg font-medium text-cyan-400 mb-3">Back Image</h3>
+            <div class="file-upload-area" id="back-dropzone">
+              <i class="fas fa-image" style="font-size: 3rem; color: rgba(255,255,255,0.3); margin-bottom: 1rem;"></i>
+              <p class="text-lg font-medium text-gray-300 mb-2">Drag & Drop Back Image Here</p>
+              <p class="text-sm text-gray-400 mb-4">or click to browse</p>
+              <input type="file" id="back-input" accept="image/*" class="hidden">
+              <button onclick="document.getElementById('back-input').click()" class="cyber-button">
+                <i class="fas fa-upload mr-2"></i>Choose Back Image
+              </button>
+            </div>
+            <div id="back-preview-container" class="hidden mt-4">
+              <img id="back-preview" class="max-w-full h-auto mx-auto rounded border-2 border-pink-400" />
+            </div>
+          </div>
+
+          <!-- Merge Settings -->
+          <div class="input-group">
+            <h3 class="text-lg font-medium text-cyan-400 mb-3">Merge Settings</h3>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Layout</label>
+                <select id="layout-select" class="cyber-input">
+                  <option value="horizontal">Horizontal (Side by Side)</option>
+                  <option value="vertical">Vertical (Top to Bottom)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Spacing (px)</label>
+                <input type="range" id="spacing" min="0" max="50" value="10" class="w-full">
+                <div class="flex justify-between text-xs text-gray-400">
+                  <span>0px</span>
+                  <span id="spacing-value">10px</span>
+                  <span>50px</span>
+                </div>
+              </div>
+            </div>
+            <button id="merge-btn" class="cyber-button mt-4 w-full opacity-50" disabled>
+              <i class="fas fa-layer-group mr-2"></i>Merge Images
+            </button>
+          </div>
+          <div class="input-group p-6">
+            <h3 class="text-lg font-medium text-gray-700 mb-4">
+              <i class="fas fa-image mr-2 text-purple-600"></i>Front Image
+            </h3>
+            
+            <div class="file-upload-area" id="front-dropzone">
+              <i class="fas fa-image text-4xl text-gray-400 mb-4"></i>
+              <p class="text-lg font-medium text-gray-600 mb-2">Drop front image here</p>
+              <p class="text-sm text-gray-500 mb-4">JPG, PNG, WebP • Max 10MB</p>
+              <input type="file" id="front-input" accept="image/*" class="hidden">
+              <button onclick="document.getElementById('front-input').click()" 
+                      class="cyber-button">
+                <i class="fas fa-folder-open mr-2"></i>Choose Front Image
+              </button>
+            </div>
+            
+            <div id="front-preview" class="mt-4 hidden">
+              <img id="front-image" class="max-w-full h-32 object-cover rounded-lg mx-auto">
+            </div>
+          </div>
+
+          <!-- Upload Back Image -->
+          <div class="input-group p-6">
+            <h3 class="text-lg font-medium text-gray-700 mb-4">
+              <i class="fas fa-image mr-2 text-purple-600"></i>Back Image
+            </h3>
+            
+            <div class="file-upload-area" id="back-dropzone">
+              <i class="fas fa-image text-4xl text-gray-400 mb-4"></i>
+              <p class="text-lg font-medium text-gray-600 mb-2">Drop back image here</p>
+              <p class="text-sm text-gray-500 mb-4">JPG, PNG, WebP • Max 10MB</p>
+              <input type="file" id="back-input" accept="image/*" class="hidden">
+              <button onclick="document.getElementById('back-input').click()" 
+                      class="cyber-button">
+                <i class="fas fa-folder-open mr-2"></i>Choose Back Image
+              </button>
+            </div>
+            
+            <div id="back-preview" class="mt-4 hidden">
+              <img id="back-image" class="max-w-full h-32 object-cover rounded-lg mx-auto">
+            </div>
+          </div>
+
+          <!-- Merge Settings -->
+          <div id="merge-settings" class="input-group p-6 hidden">
+            <h3 class="text-lg font-medium text-gray-700 mb-4">
+              <i class="fas fa-cog mr-2 text-purple-600"></i>Merge Options
+            </h3>
+            
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Merge Direction</label>
+                <select id="merge-direction" class="cyber-input">
+                  <option value="horizontal">Horizontal (Side by Side)</option>
+                  <option value="vertical">Vertical (Top & Bottom)</option>
+                  <option value="overlay">Overlay (Front on Back)</option>
+                  <option value="blend">Blend (50/50 Mix)</option>
+                </select>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Alignment</label>
+                <select id="alignment" class="cyber-input">
+                  <option value="center">Center</option>
+                  <option value="top">Top</option>
+                  <option value="bottom">Bottom</option>
+                  <option value="left">Left</option>
+                  <option value="right">Right</option>
+                </select>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Spacing (px)</label>
+                <input type="range" id="spacing" min="0" max="50" value="10" class="w-full">
+                <div class="flex justify-between text-xs text-gray-500">
+                  <span>0</span>
+                  <span id="spacing-value">10</span>
+                  <span>50</span>
+                </div>
+              </div>
+              
+              <div class="flex items-center space-x-3">
+                <input type="checkbox" id="resize-to-match" checked class="w-4 h-4 text-purple-600">
+                <label class="text-sm font-medium text-gray-700">Resize images to match</label>
+              </div>
+              
+              <button id="merge-button" class="cyber-button w-full">
+                <i class="fas fa-layer-group mr-2"></i>Merge Images
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Output Section -->
+        <div class="output-section space-y-6">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-4">Merged Result</h2>
+          
+          <!-- Merged Image Preview -->
+          <div class="output-group p-6">
+            <h3 class="text-lg font-medium text-gray-700 mb-4">
+              <i class="fas fa-eye mr-2 text-purple-600"></i>Preview
+            </h3>
+            
+            <div id="merged-preview" class="bg-white rounded-lg p-4 border-2 border-dashed border-gray-300 text-center min-h-64">
+              <i class="fas fa-layer-group text-6xl text-gray-400 mb-4"></i>
+              <p class="text-gray-500">Merged image will appear here</p>
+              <canvas id="merged-canvas" class="max-w-full h-auto mx-auto hidden"></canvas>
+            </div>
+          </div>
+
+          <!-- Processing Progress -->
+          <div id="processing-progress" class="output-details hidden">
+            <h3 class="text-lg font-medium text-gray-700 mb-4">Processing</h3>
+            <div class="space-y-3">
+              <div class="flex justify-between text-sm">
+                <span id="progress-text">Preparing...</span>
+                <span id="progress-percentage">0%</span>
+              </div>
+              <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Image Information -->
+          <div id="image-info" class="output-details hidden">
+            <h3 class="text-lg font-medium text-gray-700 mb-4">Image Information</h3>
+            <div class="space-y-2 text-sm">
+              <div class="detail-item">
+                <span class="detail-label">Front Size:</span>
+                <span class="detail-value" id="front-size">-</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Back Size:</span>
+                <span class="detail-value" id="back-size">-</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Merged Size:</span>
+                <span class="detail-value" id="merged-size">-</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Download Section -->
+          <div id="download-section" class="output-group p-6 hidden">
+            <h3 class="text-lg font-medium text-gray-700 mb-4">Download</h3>
+            <div class="space-y-3">
+              <select id="output-format" class="cyber-input">
+                <option value="png">PNG (Best quality)</option>
+                <option value="jpeg">JPEG (Smaller size)</option>
+                <option value="webp">WebP (Modern format)</option>
+              </select>
+              <button id="download-merged" class="download-btn w-full">
+                <i class="fas fa-download mr-2"></i>Download Merged Image
+              </button>
+            </div>        </div>
+      </div>
+    </div>
+  </main>
+  </div>
+  <script src="../shared-utils.js"></script>
+  <script src="../universal-enhancements.js"></script>
+  <script src="image-merger.js"></script>
+  
+  <script>
+    // Initialize Particles.js background
+    document.addEventListener('DOMContentLoaded', function() {
+      tsParticles.load("particles-js", {
+        particles: {
+          number: { value: 60, density: { enable: true, value_area: 800 }},
+          color: { value: "#00d4ff" },
+          shape: { type: "circle" },
+          opacity: { value: 0.1, random: false },
+          size: { value: 3, random: true },
+          line_linked: { enable: true, distance: 150, color: "#00d4ff", opacity: 0.2, width: 1 },
+          move: { enable: true, speed: 2, direction: "none", random: false, straight: false, out_mode: "out", bounce: false }
+        },
+        interactivity: {
+          detect_on: "canvas",
+          events: { onhover: { enable: true, mode: "grab" }, onclick: { enable: true, mode: "push" }, resize: true },
+          modes: { grab: { distance: 140, line_linked: { opacity: 1 }}, push: { particles_nb: 4 }}
+        },
+        retina_detect: true
+      });
+    });
+  </script>
+</body>
+</html>

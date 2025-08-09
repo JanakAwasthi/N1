@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Enhancer - LinkToQR.me NEXUS</title>
+  
+  <!-- Favicon and App Icons -->
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../favicon.ico">
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Advanced Image Enhancer tool - Professional filters and adjustments. Part of LinkToQR.me NEXUS toolkit.">
+  <meta name="keywords" content="image enhancer, photo editor, image filters, photo enhancement, LinkToQR">
+  <meta name="author" content="LinkToQR.me NEXUS">
+  
+  <!-- Social Media Meta Tags -->
+  <meta property="og:title" content="Image Enhancer - LinkToQR.me NEXUS">
+  <meta property="og:description" content="Advanced Image Enhancer tool - Professional filters and adjustments.">
+  <meta property="og:image" content="../../favicon.ico">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Image Enhancer - LinkToQR.me NEXUS">
+  <meta name="twitter:description" content="Advanced Image Enhancer tool - Professional filters and adjustments.">
+  <meta name="twitter:image" content="../../favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared-styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #10b981 0%, #059669 100%); min-height: 100vh; }
+    .tool-container { background: white; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+    .input-group { background: #f1f5f9; border-radius: 12px; }
+    .image-preview { background: #f8fafc; border-radius: 15px; border: 2px dashed #e5e7eb; min-height: 300px; }
+    .image-ready { border-color: #10b981; background: #f0fdf4; }
+    .drop-zone { border: 2px dashed #d1d5db; border-radius: 12px; transition: all 0.3s; }
+    .drop-zone.dragover { border-color: #10b981; background-color: #f0fdf4; }
+    .slider-container { background: white; border-radius: 8px; padding: 1rem; }
+    .filter-preset { border: 2px solid #e5e7eb; border-radius: 8px; transition: all 0.3s; cursor: pointer; }
+    .filter-preset:hover { border-color: #10b981; }
+    .filter-preset.active { border-color: #10b981; background: #f0fdf4; }
+    .comparison-container { position: relative; overflow: hidden; border-radius: 12px; }
+    .comparison-slider { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; }
+    .before-after { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }  </style>
+</head>
+<body class="p-4">
+  <!-- Navigation Header -->
+  <nav class="mb-6">
+    <div class="max-w-6xl mx-auto">
+      <div class="bg-white bg-opacity-90 backdrop-blur-sm rounded-xl p-4 shadow-lg">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4">
+            <a href="../../index.html" class="text-2xl font-bold text-green-600 hover:text-green-700 transition-colors">
+              <i class="fas fa-arrow-left mr-2"></i>LinkToQR.me
+            </a>
+            <span class="text-gray-400">|</span>
+            <h2 class="text-xl font-semibold text-gray-800">Image Enhancer</h2>
+          </div>
+          <div class="flex items-center space-x-3">
+            <a href="../../index.html" class="return-home-btn">
+              <i class="fas fa-home mr-2"></i>Home
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold text-white mb-2">Advanced Image Enhancer</h1>
+      <p class="text-white opacity-90">Enhance your images with professional filters and adjustments</p>
+    </div>
+
+    <div class="tool-container p-8">
+      <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+        
+        <!-- Image Upload Section -->
+        <div class="space-y-6">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-4">Upload Image</h2>
+          
+          <!-- Upload Area -->
+          <div class="input-group p-6">
+            <div 
+              id="drop-zone" 
+              class="drop-zone p-8 text-center cursor-pointer"
+              onclick="document.getElementById('file-input').click()"
+            >
+              <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
+              <p class="text-gray-600 mb-2">Drop image here or click to browse</p>
+              <p class="text-sm text-gray-500">Supports: JPG, PNG, WebP, GIF</p>
+              <input 
+                type="file" 
+                id="file-input" 
+                accept="image/*" 
+                class="hidden"
+              >
+            </div>
+          </div>
+
+          <!-- Enhancement Controls -->
+          <div id="enhancement-controls" class="space-y-4 hidden">
+            <h3 class="text-lg font-medium text-gray-700">Enhancement Controls</h3>
+            
+            <!-- Basic Adjustments -->
+            <div class="slider-container">
+              <h4 class="font-medium text-gray-700 mb-3">Basic Adjustments</h4>
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-600 mb-2">
+                    Brightness: <span id="brightness-value">0</span>
+                  </label>
+                  <input type="range" id="brightness" min="-100" max="100" value="0" step="1" class="w-full">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-600 mb-2">
+                    Contrast: <span id="contrast-value">0</span>
+                  </label>
+                  <input type="range" id="contrast" min="-100" max="100" value="0" step="1" class="w-full">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-600 mb-2">
+                    Saturation: <span id="saturation-value">0</span>
+                  </label>
+                  <input type="range" id="saturation" min="-100" max="100" value="0" step="1" class="w-full">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-600 mb-2">
+                    Vibrance: <span id="vibrance-value">0</span>
+                  </label>
+                  <input type="range" id="vibrance" min="-100" max="100" value="0" step="1" class="w-full">
+                </div>
+              </div>
+            </div>
+
+            <!-- Color Adjustments -->
+            <div class="slider-container">
+              <h4 class="font-medium text-gray-700 mb-3">Color Adjustments</h4>
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-600 mb-2">
+                    Hue: <span id="hue-value">0</span>°
+                  </label>
+                  <input type="range" id="hue" min="-180" max="180" value="0" step="1" class="w-full">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-600 mb-2">
+                    Temperature: <span id="temperature-value">0</span>
+                  </label>
+                  <input type="range" id="temperature" min="-100" max="100" value="0" step="1" class="w-full">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-600 mb-2">
+                    Tint: <span id="tint-value">0</span>
+                  </label>
+                  <input type="range" id="tint" min="-100" max="100" value="0" step="1" class="w-full">
+                </div>
+              </div>
+            </div>
+
+            <!-- Advanced Filters -->
+            <div class="slider-container">
+              <h4 class="font-medium text-gray-700 mb-3">Advanced Filters</h4>
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-600 mb-2">
+                    Sharpen: <span id="sharpen-value">0</span>
+                  </label>
+                  <input type="range" id="sharpen" min="0" max="100" value="0" step="1" class="w-full">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-600 mb-2">
+                    Blur: <span id="blur-value">0</span>px
+                  </label>
+                  <input type="range" id="blur" min="0" max="10" value="0" step="0.1" class="w-full">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-600 mb-2">
+                    Noise Reduction: <span id="noise-value">0</span>
+                  </label>
+                  <input type="range" id="noise" min="0" max="100" value="0" step="1" class="w-full">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-600 mb-2">
+                    Vignette: <span id="vignette-value">0</span>
+                  </label>
+                  <input type="range" id="vignette" min="0" max="100" value="0" step="1" class="w-full">
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="space-y-3">
+              <button 
+                onclick="resetAllFilters()" 
+                class="w-full py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-all"
+              >
+                <i class="fas fa-undo mr-2"></i>Reset All
+              </button>
+              <button 
+                onclick="autoEnhance()" 
+                class="w-full py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all"
+              >
+                <i class="fas fa-magic mr-2"></i>Auto Enhance
+              </button>
+            </div>
+          </div>
+
+          <!-- Filter Presets -->
+          <div id="filter-presets" class="input-group p-4 hidden">
+            <h3 class="text-lg font-medium text-gray-700 mb-4">Filter Presets</h3>
+            <div class="grid grid-cols-2 gap-3" id="presets-container">
+              <!-- Presets will be populated here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Image Preview Section -->
+        <div class="xl:col-span-2 space-y-6">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-4">Image Preview</h2>
+          
+          <!-- Image Display -->
+          <div class="image-preview p-8 text-center" id="image-preview">
+            <i class="fas fa-image text-6xl text-gray-300 mb-4"></i>
+            <p class="text-gray-500">Upload an image to start enhancing</p>
+            
+            <div id="image-container" class="hidden">
+              <!-- Before/After Comparison -->
+              <div id="comparison-mode" class="mb-4">
+                <div class="flex justify-center space-x-4 mb-4">
+                  <button 
+                    onclick="toggleComparisonMode('single')" 
+                    id="single-view-btn"
+                    class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all"
+                  >
+                    Enhanced View
+                  </button>
+                  <button 
+                    onclick="toggleComparisonMode('comparison')" 
+                    id="comparison-view-btn"
+                    class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-all"
+                  >
+                    Before/After
+                  </button>
+                </div>
+              </div>
+
+              <!-- Single Image View -->
+              <div id="single-image-view" class="comparison-container">
+                <canvas id="enhanced-canvas" class="max-w-full h-auto mx-auto rounded-lg shadow-lg"></canvas>
+              </div>
+
+              <!-- Before/After Comparison View -->
+              <div id="before-after-view" class="before-after hidden">
+                <div class="text-center">
+                  <h4 class="font-medium text-gray-700 mb-2">Original</h4>
+                  <canvas id="original-canvas" class="max-w-full h-auto rounded-lg shadow-lg"></canvas>
+                </div>
+                <div class="text-center">
+                  <h4 class="font-medium text-gray-700 mb-2">Enhanced</h4>
+                  <canvas id="enhanced-canvas-comparison" class="max-w-full h-auto rounded-lg shadow-lg"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Image Information -->
+          <div id="image-info" class="input-group p-4 hidden">
+            <h3 class="text-lg font-medium text-gray-700 mb-3">Image Information</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+              <div><span class="font-medium">Format:</span> <span id="image-format">-</span></div>
+              <div><span class="font-medium">Size:</span> <span id="image-size">-</span></div>
+              <div><span class="font-medium">Dimensions:</span> <span id="image-dimensions">-</span></div>
+              <div><span class="font-medium">File Size:</span> <span id="file-size">-</span></div>
+            </div>
+          </div>
+
+          <!-- Download Options -->
+          <div id="download-options" class="hidden space-y-4">
+            <h3 class="text-lg font-medium text-gray-700 mb-3">Download Enhanced Image</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              
+              <!-- Quality Settings -->
+              <div class="input-group p-4">
+                <h4 class="font-medium text-gray-700 mb-3">Export Settings</h4>
+                <div class="space-y-3">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-1">Format</label>
+                    <select id="export-format" class="w-full p-2 border border-gray-300 rounded-lg">
+                      <option value="png">PNG (Lossless)</option>
+                      <option value="jpeg">JPEG (Compressed)</option>
+                      <option value="webp">WebP (Modern)</option>
+                    </select>
+                  </div>
+                  <div id="quality-setting">
+                    <label class="block text-sm font-medium text-gray-600 mb-1">
+                      Quality: <span id="quality-display">90</span>%
+                    </label>
+                    <input type="range" id="export-quality" min="10" max="100" value="90" step="5" class="w-full">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Download Buttons -->
+              <div class="md:col-span-2 flex flex-col justify-center space-y-3">
+                <button 
+                  onclick="downloadImage('original')" 
+                  class="py-3 px-6 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-all"
+                >
+                  <i class="fas fa-download mr-2"></i>Download Original Size
+                </button>
+                <button 
+                  onclick="downloadImage('hd')" 
+                  class="py-3 px-6 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all"
+                >
+                  <i class="fas fa-download mr-2"></i>Download HD (1920px)
+                </button>
+                <button 
+                  onclick="downloadImage('4k')" 
+                  class="py-3 px-6 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all"
+                >
+                  <i class="fas fa-download mr-2"></i>Download 4K (3840px)
+                </button>
+                <button 
+                  onclick="downloadImage('custom')" 
+                  class="py-3 px-6 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all"
+                >
+                  <i class="fas fa-download mr-2"></i>Download Enhanced
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Processing Progress -->
+          <div id="processing-progress" class="input-group p-4 hidden">
+            <h3 class="text-lg font-medium text-gray-700 mb-3">Processing</h3>
+            <div class="space-y-2">
+              <div class="flex justify-between text-sm">
+                <span id="progress-text">Applying enhancements...</span>
+                <span id="progress-percentage">0%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div id="progress-bar" class="bg-green-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../shared-utils.js"></script>
+  <script src="../universal-enhancements.js"></script>
+  <script src="image-enhancer.js"></script>
+</body>
+</html>

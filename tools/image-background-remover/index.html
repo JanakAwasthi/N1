@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Background Remover - LinkToQR.me NEXUS</title>
+  
+  <!-- Favicon and Google AdSense -->
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <meta name="google-adsense-account" content="ca-pub-6126558809611102">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6126558809611102"
+     crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
+  <link rel="stylesheet" href="../shared-styles.css">
+  <script src="../shared-utils.js"></script>
+</head>
+<body>
+  <!-- Particles.js Background -->
+  <div id="particles-js"></div>
+
+  <!-- Futuristic Header -->
+  <header class="futuristic-header sticky top-0 z-50 w-full py-4">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+      <!-- Logo -->
+      <a href="../../index.html" class="flex items-center">
+        <span class="text-3xl font-bold logo-text orbitron">⚡ LinkToQR.me</span>
+        <span class="text-lg font-semibold text-gray-400 ml-2">NEXUS</span>
+      </a>
+
+      <!-- Tool Name -->
+      <div class="hidden md:block">
+        <span class="text-xl font-semibold text-cyan-400 orbitron">BACKGROUND REMOVER</span>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="flex space-x-4">
+        <a href="../../index.html" class="return-home-btn">
+          <i class="fas fa-home mr-2"></i>HOME
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 py-16">
+    <!-- Hero Section -->
+    <div class="text-center mb-16">
+      <h1 class="text-6xl font-bold mb-6 orbitron text-gradient">
+        BACKGROUND REMOVER
+      </h1>
+      <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+        Remove backgrounds from images automatically with AI-powered detection
+      </p>
+    </div>
+
+    <div class="tool-layout">
+      
+      <!-- Input Section -->
+      <div class="input-section">
+        <h2 class="text-3xl font-semibold text-gradient orbitron mb-6">Input & Settings</h2>
+        
+        <div class="file-upload-area" id="dropzone">
+          <i class="fas fa-cut" style="font-size: 3rem; color: rgba(255,255,255,0.3); margin-bottom: 1rem;"></i>
+          <p class="text-lg font-medium text-gray-300 mb-2">Drag & Drop Image Here</p>
+          <p class="text-sm text-gray-400 mb-4">or click to browse</p>
+          <input type="file" id="image-input" accept="image/*" class="hidden">
+          <button onclick="document.getElementById('image-input').click()" 
+                  class="cyber-button">
+            <i class="fas fa-file-image mr-2"></i>Choose File
+          </button>
+        </div>
+
+        <div id="original-preview" class="hidden mt-4">
+          <h3 class="text-lg font-medium text-cyan-400 mb-3">Original Image</h3>
+          <div class="preview-container bg-gray-800 bg-opacity-50 p-4 rounded-lg">
+            <img id="original-image" class="max-w-full h-auto mx-auto rounded" />
+          </div>
+        </div>
+
+        <div id="removal-controls" class="hidden input-group mt-4">
+          <h3 class="text-lg font-medium text-cyan-400 mb-4">Removal Settings</h3>
+          <div class="space-y-4">
+            <!-- Detection Method -->
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Detection Method</label>
+              <select id="detection-method" class="cyber-input">
+                <option value="auto">Auto Detection (AI)</option>
+                <option value="chroma">Chroma Key (Color)</option>
+                <option value="edge">Edge Detection</option>
+                <option value="magic">Magic Wand</option>
+              </select>
+            </div>
+            
+            <!-- Chroma Key Color (for chroma method) -->
+            <div id="chroma-controls" class="hidden">
+              <label class="block text-sm font-medium text-gray-300 mb-2">Background Color</label>
+              <div class="flex items-center space-x-2">
+                <input type="color" id="chroma-color" value="#00ff00" class="w-12 h-8 rounded border border-cyan-400">
+                <span class="text-sm text-gray-400">Click to pick color from image</span>
+              </div>
+              <div class="mt-2">
+                <label class="block text-sm font-medium text-gray-300 mb-1">Tolerance</label>
+                <input type="range" id="chroma-tolerance" min="0" max="100" value="30" class="w-full">
+                <div class="flex justify-between text-xs text-gray-400">
+                  <span>Strict</span>
+                  <span id="tolerance-value">30%</span>
+                  <span>Loose</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Edge Detection Settings -->
+            <div id="edge-controls" class="hidden">
+              <label class="block text-sm font-medium text-gray-300 mb-2">Edge Sensitivity</label>
+              <input type="range" id="edge-sensitivity" min="1" max="100" value="50" class="w-full">
+              <div class="flex justify-between text-xs text-gray-400">
+                <span>Low</span>
+                <span id="edge-value">50%</span>
+                <span>High</span>
+              </div>
+            </div>
+            
+            <!-- Magic Wand Settings -->
+            <div id="magic-controls" class="hidden">
+              <p class="text-sm text-gray-400 mb-2">Click on the background area to remove it</p>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Tolerance</label>
+              <input type="range" id="magic-tolerance" min="0" max="100" value="20" class="w-full">
+              <div class="flex justify-between text-xs text-gray-400">
+                <span>Precise</span>
+                <span id="magic-value">20%</span>
+                <span>Broad</span>
+              </div>
+            </div>
+            
+            <!-- Output Settings -->
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Output Format</label>
+              <select id="output-format" class="cyber-input">
+                <option value="png">PNG (Transparent)</option>
+                <option value="webp">WebP (Transparent)</option>
+                <option value="jpeg-white">JPEG (White Background)</option>
+                <option value="jpeg-custom">JPEG (Custom Background)</option>
+              </select>
+            </div>
+            
+            <!-- Custom Background Color -->
+            <div id="background-color-controls" class="hidden">
+              <label class="block text-sm font-medium text-gray-300 mb-2">Background Color</label>
+              <input type="color" id="background-color" value="#ffffff" class="w-full h-10 rounded border border-cyan-400">
+            </div>
+            
+            <button id="remove-btn" class="cyber-button w-full">
+              <i class="fas fa-magic mr-2"></i>Remove Background
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Output Section -->
+      <div class="output-section">
+        <h2 class="text-3xl font-semibold text-gradient orbitron mb-6">Output & Download</h2>
+        
+        <div class="output-preview" id="output-preview-container">
+          <i class="fas fa-image" style="font-size: 3rem; color: rgba(255,255,255,0.3); margin-bottom: 1rem;"></i>
+          <p style="color: rgba(255,255,255,0.5);">Processed image will appear here</p>
+          <div id="output-preview" class="hidden">
+            <img id="processed-image" class="max-w-full h-auto mx-auto rounded" />
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container hidden">
+          <div class="progress-bar"></div>
+        </div>
+
+        <!-- Output Details -->
+        <div class="output-details" id="output-details">
+          <!-- Details will be populated by JavaScript -->
+        </div>
+
+        <!-- Download Section -->
+        <div id="download-section" class="hidden">
+          <button id="download-btn" class="download-btn w-full">
+            <i class="fas fa-download mr-2"></i>
+            Download Image
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Initialize Particles.js background
+    document.addEventListener('DOMContentLoaded', function() {
+      tsParticles.load("particles-js", {
+        particles: {
+          number: { value: 60, density: { enable: true, value_area: 800 }},
+          color: { value: "#00d4ff" },
+          shape: { type: "circle" },
+          opacity: { value: 0.1, random: false },
+          size: { value: 3, random: true },
+          line_linked: { enable: true, distance: 150, color: "#00d4ff", opacity: 0.2, width: 1 },
+          move: { enable: true, speed: 2, direction: "none", random: false, straight: false, out_mode: "out", bounce: false }
+        },
+        interactivity: {
+          detect_on: "canvas",
+          events: { onhover: { enable: true, mode: "grab" }, onclick: { enable: true, mode: "push" }, resize: true },
+          modes: { grab: { distance: 140, line_linked: { opacity: 1 }}, push: { particles_nb: 4 }}
+        },
+        retina_detect: true
+      });
+    });
+  </script>
+  <script src="../universal-enhancements.js"></script>
+  <script src="image-background-remover.js"></script>
+</body>
+</html>

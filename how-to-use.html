@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Use - LinkToQR.me NEXUS</title>
+  
+  <!-- Favicon and App Icons -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico">
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Complete guide on how to use LinkToQR.me NEXUS tools - QR generators, image tools, PDF converters and more.">
+  <meta name="keywords" content="how to use, user guide, tutorial, LinkToQR, web tools, nexus">
+  <meta name="author" content="LinkToQR.me NEXUS">
+  
+  <!-- Social Media Meta Tags -->
+  <meta property="og:title" content="How to Use - LinkToQR.me NEXUS">
+  <meta property="og:description" content="Complete guide on how to use LinkToQR.me NEXUS tools">
+  <meta property="og:image" content="/favicon.ico">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How to Use - LinkToQR.me NEXUS">
+  <meta name="twitter:description" content="Complete guide on how to use LinkToQR.me NEXUS tools">
+  <meta name="twitter:image" content="/favicon.ico">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
+  
+  <style>
+    :root {
+      --primary: #00d4ff;
+      --primary-dark: #0099cc;
+      --secondary: #ff0080;
+      --accent: #7c3aed;
+      --success: #00ff88;
+      --warning: #ffaa00;
+      --error: #ff0040;
+      --neon-blue: #00d4ff;
+      --neon-pink: #ff0080;
+      --neon-purple: #8000ff;
+      --dark-bg: #0a0a0a;
+      --dark-surface: #1a1a1a;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Exo 2', sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #000a1a 100%);
+      color: white;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .orbitron { font-family: 'Orbitron', monospace; }
+
+    /* Particles Background */
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    /* Glassmorphism */
+    .glass {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+    }
+
+    /* Cyber Buttons */
+    .cyber-button {
+      background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink));
+      border: none;
+      border-radius: 25px;
+      padding: 12px 30px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .cyber-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(0, 212, 255, 0.6);
+    }
+
+    /* Header */
+    .cyber-header {
+      background: rgba(10, 10, 10, 0.9);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0, 212, 255, 0.3);
+    }
+
+    .logo-text {
+      background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .guide-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .step-number {
+      background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink));
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-right: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Particles Background -->
+  <div id="particles-js"></div>
+
+  <!-- Header -->
+  <header class="cyber-header sticky top-0 z-50 w-full py-4 mb-8">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex items-center justify-between">
+        <!-- Logo -->
+        <a href="index.html" class="flex items-center">
+          <span class="text-3xl font-bold logo-text orbitron">⚡ LinkToQR.me</span>
+          <span class="text-lg font-semibold text-gray-400 ml-2">NEXUS</span>
+        </a>
+
+        <!-- Navigation -->
+        <nav class="flex space-x-4">
+          <a href="index.html" class="cyber-button text-sm">
+            <i class="fas fa-home mr-2"></i>HOME
+          </a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 py-16">
+    <!-- Hero Section -->
+    <div class="text-center mb-16">
+      <h1 class="text-6xl font-bold mb-6 orbitron" style="background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+        📖 HOW TO USE
+      </h1>
+      <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+        Complete guide to mastering LinkToQR.me NEXUS tools
+      </p>
+    </div>
+
+    <!-- Quick Start Guide -->
+    <div class="guide-card">
+      <h2 class="text-3xl font-bold mb-6 orbitron text-white">🚀 Quick Start Guide</h2>
+      
+      <div class="space-y-6">
+        <div class="flex items-start">
+          <div class="step-number">1</div>
+          <div>
+            <h3 class="text-xl font-semibold text-white mb-2">Navigate the Homepage</h3>
+            <p class="text-gray-300">Click any tool card to open it in a new tab. All tools are instantly accessible without registration.</p>
+          </div>
+        </div>
+
+        <div class="flex items-start">
+          <div class="step-number">2</div>
+          <div>
+            <h3 class="text-xl font-semibold text-white mb-2">Choose Your Tool</h3>
+            <p class="text-gray-300">Select from QR generators, image processors, PDF converters, or the secure text vault.</p>
+          </div>
+        </div>
+
+        <div class="flex items-start">
+          <div class="step-number">3</div>
+          <div>
+            <h3 class="text-xl font-semibold text-white mb-2">Upload & Process</h3>
+            <p class="text-gray-300">Drag and drop files or click to browse. Most tools process files instantly in your browser.</p>
+          </div>
+        </div>
+
+        <div class="flex items-start">
+          <div class="step-number">4</div>
+          <div>
+            <h3 class="text-xl font-semibold text-white mb-2">Download Results</h3>
+            <p class="text-gray-300">Download processed files or save them directly. All processing happens locally for security.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tool-Specific Guides -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      
+      <!-- QR Generator Guide -->
+      <div class="guide-card">
+        <h3 class="text-2xl font-bold mb-4 orbitron text-white">📱 QR Generator</h3>
+        <ul class="space-y-2 text-gray-300">
+          <li>• Enter text, URL, or select WiFi/Contact options</li>
+          <li>• Customize colors and add logos</li>
+          <li>• Adjust error correction level</li>
+          <li>• Download as PNG, SVG, or PDF</li>
+          <li>• Generate in bulk with CSV upload</li>
+        </ul>
+      </div>
+
+      <!-- Image Tools Guide -->
+      <div class="guide-card">
+        <h3 class="text-2xl font-bold mb-4 orbitron text-white">🖼️ Image Tools</h3>
+        <ul class="space-y-2 text-gray-300">
+          <li>• <strong>Compressor:</strong> Reduce file size while maintaining quality</li>
+          <li>• <strong>Resizer:</strong> Change dimensions with aspect ratio control</li>
+          <li>• <strong>Enhancer:</strong> Apply filters and adjustments</li>
+          <li>• <strong>Format Converter:</strong> Convert between JPG, PNG, WebP</li>
+        </ul>
+      </div>
+
+      <!-- PDF Tools Guide -->
+      <div class="guide-card">
+        <h3 class="text-2xl font-bold mb-4 orbitron text-white">📄 PDF Tools</h3>
+        <ul class="space-y-2 text-gray-300">
+          <li>• <strong>Converter:</strong> Convert documents and images to PDF</li>
+          <li>• <strong>Merger:</strong> Combine multiple PDFs into one</li>
+          <li>• <strong>Photo to PDF:</strong> Create PDFs from image collections</li>
+          <li>• <strong>Scanner:</strong> Convert photos to document scans</li>
+        </ul>
+      </div>
+
+      <!-- Store Text Guide -->
+      <div class="guide-card">
+        <h3 class="text-2xl font-bold mb-4 orbitron text-white">🔐 Store Text Vault</h3>
+        <ul class="space-y-2 text-gray-300">
+          <li>• <strong>Store Text:</strong> Create password-protected notes</li>
+          <li>• <strong>Find Text:</strong> Retrieve saved notes with name/password</li>
+          <li>• <strong>Multi-Window:</strong> Organize content in separate windows</li>
+          <li>• <strong>Local Storage:</strong> All data stays in your browser</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Security & Privacy -->
+    <div class="guide-card">
+      <h2 class="text-3xl font-bold mb-6 orbitron text-white">🔒 Security & Privacy</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h4 class="text-xl font-semibold text-white mb-3">🛡️ Your Data is Safe</h4>
+          <ul class="space-y-2 text-gray-300">
+            <li>• All processing happens locally in your browser</li>
+            <li>• No files uploaded to external servers</li>
+            <li>• No personal data collection</li>
+            <li>• No registration or login required</li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-xl font-semibold text-white mb-3">💾 Data Storage</h4>
+          <ul class="space-y-2 text-gray-300">
+            <li>• Store Text vault uses local browser storage</li>
+            <li>• Export important notes for backup</li>
+            <li>• Clear browser data will delete saved notes</li>
+            <li>• Use strong passwords for note protection</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tips & Tricks -->
+    <div class="guide-card">
+      <h2 class="text-3xl font-bold mb-6 orbitron text-white">💡 Tips & Tricks</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div>
+          <h4 class="text-lg font-semibold text-cyan-400 mb-3">⚡ Performance</h4>
+          <ul class="space-y-1 text-gray-300 text-sm">
+            <li>• Close unused browser tabs</li>
+            <li>• Use modern browsers for best performance</li>
+            <li>• Large files may take longer to process</li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-semibold text-pink-400 mb-3">🎯 Efficiency</h4>
+          <ul class="space-y-1 text-gray-300 text-sm">
+            <li>• Bookmark frequently used tools</li>
+            <li>• Use keyboard shortcuts when available</li>
+            <li>• Batch process multiple files</li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-semibold text-purple-400 mb-3">🔧 Troubleshooting</h4>
+          <ul class="space-y-1 text-gray-300 text-sm">
+            <li>• Refresh page if tool stops working</li>
+            <li>• Check file formats are supported</li>
+            <li>• Contact support via WhatsApp</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Particles.js -->
+  <script>
+    // Initialize particles
+    tsParticles.load("particles-js", {
+      background: { color: { value: "transparent" } },
+      fpsLimit: 120,
+      interactivity: {
+        events: {
+          onClick: { enable: true, mode: "push" },
+          onHover: { enable: true, mode: "repulse" },
+          resize: true,
+        },
+        modes: {
+          push: { quantity: 4 },
+          repulse: { distance: 200, duration: 0.4 },
+        },
+      },
+      particles: {
+        color: { value: ["#00d4ff", "#ff0080", "#8000ff"] },
+        links: {
+          color: "#00d4ff",
+          distance: 150,
+          enable: true,
+          opacity: 0.3,
+          width: 1,
+        },
+        collisions: { enable: true },
+        move: {
+          direction: "none",
+          enable: true,
+          outModes: { default: "bounce" },
+          random: false,
+          speed: 2,
+          straight: false,
+        },
+        number: { density: { enable: true, area: 800 }, value: 80 },
+        opacity: { value: 0.5 },
+        shape: { type: "circle" },
+        size: { value: { min: 1, max: 5 } },
+      },
+      detectRetina: true,
+    });
+  </script>
+</body>
+</html>

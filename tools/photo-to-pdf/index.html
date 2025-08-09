@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo to PDF Converter - LinkToQR.me</title>
+    <meta name="description" content="Convert multiple photos to PDF online. Free, secure, and instant photo to PDF conversion with advanced layout options.">    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../shared-styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        .drop-zone {
+            border: 2px dashed #d1d5db;
+            transition: all 0.3s ease;
+        }
+        .drop-zone.drag-over {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+        .photo-item {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .photo-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .drag-handle {
+            cursor: move;
+        }
+        .progress-bar {
+            transition: width 0.3s ease;
+        }
+        .sortable-ghost {
+            opacity: 0.5;
+        }
+        .page-size-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="../../index.html" class="text-2xl font-bold text-blue-600">LinkToQR.me</a>
+                    <span class="ml-4 text-gray-500">/</span>
+                    <span class="ml-2 text-gray-700">Photo to PDF</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="../../index.html" class="text-gray-600 hover:text-blue-600 transition-colors">
+                        <i class="fas fa-home mr-2"></i>Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">Photo to PDF Converter</h1>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                Convert multiple photos into a single PDF document with advanced layout options and customization.
+            </p>
+        </div>        <!-- Main Container -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <div class="tool-layout">
+                
+                <!-- Input Section -->
+                <div class="input-section space-y-6">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Upload & Settings</h2>
+                    
+                    <!-- Upload Section -->
+                    <div class="input-group p-6">
+                        <h3 class="text-lg font-medium text-gray-700 mb-4">
+                            <i class="fas fa-cloud-upload-alt mr-2 text-blue-600"></i>Upload Photos
+                        </h3>
+                        
+                        <div id="dropZone" class="drop-zone rounded-lg p-8 text-center">
+                            <div class="mb-4">
+                                <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
+                                <h4 class="text-xl font-semibold text-gray-700 mb-2">Drop photos here or click to browse</h4>
+                                <p class="text-gray-500">Supports JPG, PNG, WebP, and more</p>
+                            </div>
+                            <input type="file" id="photoInput" multiple accept="image/*" class="hidden">
+                            <button id="browseBtn" class="btn-primary">
+                                <i class="fas fa-folder-open mr-2"></i>Browse Files
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Settings Panel -->
+                    <div id="settingsPanel" class="input-group p-6 hidden">
+                        <h3 class="text-lg font-medium text-gray-700 mb-4">
+                            <i class="fas fa-cogs mr-2 text-green-600"></i>PDF Settings
+                        </h3>
+                        
+                        <div class="grid grid-cols-1 gap-4">
+                <!-- Page Size -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Page Size</label>
+                    <select id="pageSize" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="a4">A4 (210 × 297 mm)</option>
+                        <option value="letter">Letter (8.5 × 11 in)</option>
+                        <option value="a3">A3 (297 × 420 mm)</option>
+                        <option value="a5">A5 (148 × 210 mm)</option>
+                        <option value="legal">Legal (8.5 × 14 in)</option>
+                    </select>
+                </div>
+
+                <!-- Orientation -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Orientation</label>
+                    <select id="orientation" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="portrait">Portrait</option>
+                        <option value="landscape">Landscape</option>
+                    </select>
+                </div>
+
+                <!-- Layout -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Layout</label>
+                    <select id="layout" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="fit">Fit to Page</option>
+                        <option value="fill">Fill Page</option>
+                        <option value="multiple">Multiple per Page</option>
+                    </select>
+                </div>                <!-- Quality -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Quality</label>
+                    <select id="quality" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="high">High Quality</option>
+                        <option value="medium">Medium Quality</option>
+                        <option value="low">Low Quality (Smaller File)</option>
+                    </select>
+                </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Output Section -->
+                <div class="output-section space-y-6">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Preview & Download</h2>
+                    
+                    <!-- Photos Grid -->
+                    <div id="photosContainer" class="output-group p-6 hidden">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-medium text-gray-700">Selected Photos</h3>
+                            <div class="flex space-x-2">
+                                <button id="selectAllBtn" class="text-blue-600 hover:text-blue-800 text-sm">Select All</button>
+                                <button id="deselectAllBtn" class="text-gray-600 hover:text-gray-800 text-sm">Deselect All</button>
+                                <button id="removeSelectedBtn" class="text-red-600 hover:text-red-800 text-sm">Remove Selected</button>
+                            </div>
+                        </div>
+                        <div id="photosGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+                            <!-- Photos will be added here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+                        <button id="selectAllBtn" class="text-blue-600 hover:text-blue-800 text-sm">Select All</button>
+                        <button id="deselectAllBtn" class="text-gray-600 hover:text-gray-800 text-sm">Deselect All</button>
+                        <button id="removeSelectedBtn" class="text-red-600 hover:text-red-800 text-sm">Remove Selected</button>
+                    </div>
+                </div>
+                <div id="photosGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mb-6">
+                    <!-- Photos will be added here -->
+                </div>
+            </div>
+
+            <!-- Convert Button -->
+            <div id="convertSection" class="text-center hidden">
+                <button id="convertBtn" class="bg-green-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i class="fas fa-file-pdf mr-2"></i>Convert to PDF
+                </button>
+            </div>
+
+            <!-- Progress -->
+            <div id="progressContainer" class="hidden mt-6">
+                <div class="bg-gray-200 rounded-full h-3 mb-2">
+                    <div id="progressBar" class="progress-bar bg-blue-600 h-3 rounded-full" style="width: 0%"></div>
+                </div>
+                <p id="progressText" class="text-center text-gray-600">Preparing...</p>
+            </div>
+
+            <!-- Result -->
+            <div id="resultContainer" class="hidden mt-6 p-6 bg-green-50 border border-green-200 rounded-lg">
+                <div class="text-center">
+                    <i class="fas fa-check-circle text-green-600 text-3xl mb-3"></i>
+                    <h3 class="text-lg font-semibold text-green-800 mb-2">PDF Created Successfully!</h3>
+                    <p class="text-green-700 mb-4">Your photos have been converted to PDF.</p>
+                    <button id="downloadBtn" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors mr-3">
+                        <i class="fas fa-download mr-2"></i>Download PDF
+                    </button>
+                    <button id="newConversionBtn" class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-plus mr-2"></i>New Conversion
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="grid md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="text-blue-600 text-2xl mb-3">
+                    <i class="fas fa-images"></i>
+                </div>
+                <h3 class="text-lg font-semibold mb-2">Multiple Formats</h3>
+                <p class="text-gray-600">Support for JPG, PNG, WebP, and other image formats</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="text-blue-600 text-2xl mb-3">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <h3 class="text-lg font-semibold mb-2">Advanced Options</h3>
+                <p class="text-gray-600">Customize page size, orientation, layout, and quality</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="text-blue-600 text-2xl mb-3">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3 class="text-lg font-semibold mb-2">Secure & Private</h3>
+                <p class="text-gray-600">All processing happens in your browser - no uploads</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p>&copy; 2024 LinkToQR.me. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../shared-utils.js"></script>
+    <script src="../universal-enhancements.js"></script>
+    <script src="photo-to-pdf.js"></script>
+</body>
+</html>
